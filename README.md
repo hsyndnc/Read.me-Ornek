@@ -101,6 +101,7 @@ Authentication ile business logic’i izole etmek
 
 Production senaryosunda yatay ölçeklenebilirliği kolaylaştırmak
 
+**Architecture Summary**
 
 
 | Component     | Responsibility          | Scaling Strategy       |
