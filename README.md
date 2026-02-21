@@ -87,9 +87,9 @@ Bu proje, sadeleştirilmiş bir ödeme işleme altyapısının analiz edilmesi, 
 
 Sistem iki ayrı servis olarak tasarlanmıştır:
 
-AuthApi → Merchant doğrulama servisi (stateless)
+**AuthApi →** Merchant doğrulama servisi (stateless)
 
-PaymentApi → Ödeme işleme ve sorgulama servisi
+**PaymentApi →** Ödeme işleme ve sorgulama servisi
 
 PaymentApi, gelen her istekte AuthApi’ye doğrulama çağrısı yaparak merchant bilgisini alır ve yalnızca geçerli istekleri işleme alır.
 
