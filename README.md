@@ -244,7 +244,7 @@ sequenceDiagram
 
 # 💳 Payment Creation Flow
 
-'''mermaid
+```mermaid
 
 sequenceDiagram
     participant Client
@@ -271,7 +271,7 @@ sequenceDiagram
 
     PaymentApi-->>Client: 201 Created\nStatus: Pending
 
-'''
+```
 
 # 🚦 7. Rate Limiting Strategy
 <div align="center">
