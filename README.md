@@ -183,6 +183,7 @@ flowchart LR
 
 PaymentApi Middleware Pipeline:
 <div align="center">
+    
 | Middleware         | Purpose                  |
 | ------------------ | ------------------------ |
 | Authentication     | API key validation       |
@@ -195,6 +196,7 @@ PaymentApi Middleware Pipeline:
 
 # 🏭 11. Production Enhancements
 <div align="center">
+    
 | Area        | Improvement          |
 | ----------- | -------------------- |
 | Security    | API Gateway, mTLS    |
@@ -206,6 +208,7 @@ PaymentApi Middleware Pipeline:
 
 # 🎯 13. Engineering Decisions Summary
 <div align="center">
+    
 | Concern       | Approach          |
 | ------------- | ----------------- |
 | Idempotency   | Unique constraint |
