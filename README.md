@@ -114,3 +114,14 @@ Production senaryosunda yatay ölçeklenebilirliği kolaylaştırmak
 | Hangfire      | Background Jobs         | Worker Scaling         |
 | ElasticSearch | Logging & Observability | Cluster                |
 </div>
+
+## 🏗 High-Level Architecture
+
+```mermaid
+flowchart LR
+    Client --> PaymentApi
+    PaymentApi --> AuthApi
+    PaymentApi --> PostgreSQL
+    PaymentApi --> Redis
+    PaymentApi --> Hangfire
+    PaymentApi --> ElasticSearch
