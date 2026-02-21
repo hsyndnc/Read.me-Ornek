@@ -78,3 +78,25 @@ Sistem ayağa kalktıktan sonra, aşağıdaki örnek isteği kullanarak bir öde
 Not: Windows kullanıyorsanız komutu tek satırda ve tırnaklara dikkat ederek yazınız.
 ```bash
 curl -X POST "http://localhost:5001/api/payments" -H "Paywall-Api-Key: secret_key_123" -H "Content-Type: application/json" -d "{\"amount\": 100.50, \"currency\": \"TRY\", \"merchantId\": 1, \"trackingCode\": \"TRK-001\", \"externalPaymentId\": \"EXT-001\"}"
+```
+
+## 💡 Technical Analysis (Aşama 1)
+**📖 Overview**
+
+Bu proje, sadeleştirilmiş bir ödeme işleme altyapısının analiz edilmesi, mimarisinin tasarlanması ve geliştirilmesi amacıyla hazırlanmıştır.
+
+Sistem iki ayrı servis olarak tasarlanmıştır:
+
+AuthApi → Merchant doğrulama servisi (stateless)
+
+PaymentApi → Ödeme işleme ve sorgulama servisi
+
+PaymentApi, gelen her istekte AuthApi’ye doğrulama çağrısı yaparak merchant bilgisini alır ve yalnızca geçerli istekleri işleme alır.
+
+Bu tasarımın amacı:
+
+Servis sorumluluklarını ayırmak
+
+Authentication ile business logic’i izole etmek
+
+Production senaryosunda yatay ölçeklenebilirliği kolaylaştırmak
