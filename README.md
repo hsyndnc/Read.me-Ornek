@@ -36,6 +36,12 @@ Paywall Backend Case Project
 
 [cite_start]Sistem **.NET 8** sürümünü gerektirir[cite: 80]. [cite_start]Altyapıyı hızlıca ayağa kaldırmak için Docker kullanılması önerilir[cite: 81, 82, 84].
 
+### 1. Repoyu Klonlayın
+Öncelikle terminalinizi açın ve projeyi bilgisayarınıza indirin:
+```bash
+git clone [https://github.com/kullanici-adi/paywall-project.git](https://github.com/kullanici-adi/paywall-project.git)
+cd paywall-project
+
 ```bash
 # Bağımlılıkları başlatın (PostgreSQL, Redis, ElasticSearch)
 docker-compose up -d
