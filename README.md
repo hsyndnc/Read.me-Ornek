@@ -40,7 +40,7 @@ Sistem **.NET 8** sürümünü gerektirir.Uygulamayı yerel makinenizde çalış
 Öncelikle terminalinizi açın ve projeyi bilgisayarınıza indirin:
 ```bash
 git clone [https://github.com/kullanici-adi/paywall-project.git](https://github.com/kullanici-adi/paywall-project.git)
-
+```
 İndirme tamamlandıktan sonra proje klasörüne giriş yapın:
 
 cd paywall-project
