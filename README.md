@@ -158,6 +158,7 @@ flowchart LR
 
 # 🔐 3. Authentication Flow
 <div align="center">
+    
 | Step | Action                 | Failure Case |
 | ---- | ---------------------- | ------------ |
 | 1    | Read `Paywall-Api-Key` | 401          |
