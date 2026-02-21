@@ -372,6 +372,27 @@ stateDiagram-v2
 - `Cancelled` durumuna geçmiş bir ödeme tekrar aktif hale getirilemez.
 - Callback yalnızca `Completed` durumundan sonra tetiklenir.
 
+# 🔍 6. Payment Query Flow (Cache-Aware)
+
+```mermaid
+
+flowchart LR
+    Client --> PaymentApi
+    PaymentApi --> Redis
+    Redis -- Cache Miss --> PostgreSQL
+    PostgreSQL --> Redis
+    PaymentApi --> Client
+
+```
+
+Query Implementation Strategy
+
+
+| Query Type        | Implementation |
+| ----------------- | -------------- |
+| TrackingCode      | LINQ           |
+| ExternalPaymentId | Raw SQL        |
+
 
 # 🚦 7. Rate Limiting Strategy
 <div align="center">
