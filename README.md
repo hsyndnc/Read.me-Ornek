@@ -318,6 +318,52 @@ sequenceDiagram
 
 </div>
 
+# 🔄 5. Payment State Lifecycle
+
+🔥 1️⃣ State Transition Kuralları Ekleyelim
+
+<div align="center">
+
+### 🔄 Durum Geçiş Kuralları
+
+| From | To | Koşul |
+|------|----|--------|
+| Pending | Completed | Başarılı ödeme sonucu |
+| Pending | Cancelled | Timeout (>30dk) veya manuel iptal |
+| Completed | CallbackSent | Callback job başarıyla tamamlandı |
+
+Geçersiz geçişler engellenmiştir (örneğin Completed → Pending mümkün değildir).
+
+</div>
+
+🔥 2️⃣ Invalid Transition Protection (Çok Güçlü)
+
+### 🛑 Geçersiz Geçiş Koruması
+
+- Durum değişimleri kontrollüdür.
+- State transition işlemleri atomic olarak gerçekleştirilir.
+- Aynı anda iki farklı güncelleme yapılması engellenir.
+
+🔥 3️⃣ Concurrency Notu (Senior Dokunuş)
+
+### ⚙️ Concurrency Kontrolü
+
+- Status güncellemeleri optimistic locking prensibine uygundur.
+- Tekil payment kaydı üzerinden deterministik geçiş sağlanır.
+- Çift tamamlama (double completion) engellenmiştir.
+
+🔥 4️⃣ Lifecycle Diyagramını Biraz Zenginleştirelim
+
+```mermaid
+
+stateDiagram-v2
+    [*] --> Pending
+    Pending --> Completed : Payment Success
+    Pending --> Cancelled : Timeout / Cancel
+    Completed --> CallbackSent : Async Callback
+
+```
+
 # 🚦 7. Rate Limiting Strategy
 <div align="center">
 
