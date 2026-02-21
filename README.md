@@ -82,6 +82,7 @@ curl -X POST http://localhost:5001/api/payments \
   -d '{
     "amount": 100.50,
     "currency": "TRY",
+    "merchantId": 1,
     "trackingCode": "TRK-001",
     "externalPaymentId": "EXT-001"
   }'
