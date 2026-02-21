@@ -100,3 +100,15 @@ Servis sorumluluklarını ayırmak
 Authentication ile business logic’i izole etmek
 
 Production senaryosunda yatay ölçeklenebilirliği kolaylaştırmak
+
+
+
+| Component     | Responsibility          | Scaling Strategy       |
+| ------------- | ----------------------- | ---------------------- |
+| AuthApi       | API Key doğrulama       | Stateless – Horizontal |
+| PaymentApi    | Payment işlemleri       | Horizontal             |
+| PostgreSQL    | Transactional Data      | Read Replica           |
+| Redis         | Cache + Rate Limit      | Distributed            |
+| Hangfire      | Background Jobs         | Worker Scaling         |
+| ElasticSearch | Logging & Observability | Cluster                |
+
