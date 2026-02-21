@@ -214,6 +214,7 @@ Amaç: Sistem stabilitesinin korunması.
 
 # 🔐 3. Authentication Flow
 
+```mermaid
 sequenceDiagram
     participant Client
     participant PaymentApi
@@ -224,7 +225,7 @@ sequenceDiagram
     AuthApi-->>PaymentApi: MerchantId + MerchantName
     PaymentApi-->>Client: Continue / 401
 
-
+```
 
 
 <div align="center">
