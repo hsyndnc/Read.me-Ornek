@@ -31,3 +31,15 @@ Paywall Backend Case Project
 <p align="center">
 <em><b>Paywall</b>, farklı merchant'ların ödeme almasını sağlayan sadeleştirilmiş bir <b>ödeme işleme altyapısıdır</b>. Mühendislik yaklaşımını ve teknik karar alma süreçlerini  yansıtan bu proje; <b>AuthApi</b> ve <b>PaymentApi</b> olmak üzere iki ana servisten oluşur.</em>
 </p>
+
+## ⚙️ Installation (Kurulum)
+
+[cite_start]Sistem **.NET 8** sürümünü gerektirir[cite: 80]. [cite_start]Altyapıyı hızlıca ayağa kaldırmak için Docker kullanılması önerilir[cite: 81, 82, 84].
+
+```bash
+# Bağımlılıkları başlatın (PostgreSQL, Redis, ElasticSearch)
+docker-compose up -d
+
+# Projeleri çalıştırın
+dotnet run --project ./Paywall.AuthApi
+dotnet run --project ./Paywall.PaymentApi
