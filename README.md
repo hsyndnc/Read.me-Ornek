@@ -226,15 +226,17 @@ sequenceDiagram
     PaymentApi-->>Client: Continue / 401
 
 ```
-
+---
 
 <div align="center">
     
-| Step | Action                 | Failure Case |
-| ---- | ---------------------- | ------------ |
-| 1    | Read `Paywall-Api-Key` | 401          |
-| 2    | Validate API Key       | 401          |
-| 3    | Return Merchant Info   | Success      |
+### 🔎 Authentication Validation Steps
+
+| Step | Action | Success Result | Failure Result |
+|------|--------|---------------|----------------|
+| 1 | Extract `Paywall-Api-Key` from Header | Continue | 401 Unauthorized |
+| 2 | Validate API Key via AuthApi | Merchant context loaded | 401 Unauthorized |
+| 3 | Inject MerchantId into Request Context | Request proceeds | - |
 
 ✔ AuthApi stateless tasarlanmıştır
 ✔ Session veya memory state tutulmaz
