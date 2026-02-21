@@ -42,28 +42,30 @@ Sistem **.NET 8** sürümünü gerektirir.Uygulamayı yerel makinenizde çalış
 git clone [https://github.com/kullanici-adi/paywall-project.git](https://github.com/kullanici-adi/paywall-project.git)
 ```
 İndirme tamamlandıktan sonra proje klasörüne giriş yapın:
-
+```bash
 cd paywall-project
-
+```
 2. Docker Compose ile Altyapıyı Başlatın
 Aşağıdaki komut, docker-compose.yml dosyasındaki tüm bağımlılıkları (Veritabanı, Cache ve Log servisleri) otomatik olarak indirir ve yapılandırır:
 
 ```bash
 docker-compose up-d
+```
 
 3. Veritabanı Şemasını Uygulayın
 Konteynerlar ayağa kalktıktan sonra, PostgreSQL üzerinde tabloların oluşması için migration komutunu çalıştırın:
 
 ```bash
 dotnet ef database update --project Paywall.Persistence
-
+```
 4. Servisleri Çalıştırın
 Sistemdeki servisleri Docker üzerinden veya yerel terminalinizden başlatabilirsiniz:
 
 Kimlik Doğrulama Servisi (AuthApi):
 ```bash
 dotnet run --project ./Paywall.AuthApi
-
+```
 Ödeme İşlem Servisi (PaymentApi):
 ```bash
 dotnet run --project ./Paywall.PaymentApi
+```
