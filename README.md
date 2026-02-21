@@ -310,11 +310,11 @@ sequenceDiagram
 
 ### 🔐 Design Guarantees
 
-- Rate limiting is enforced before authentication to prevent abuse
-- API validation is stateless
-- `ExternalPaymentId` is protected by DB-level UNIQUE constraint
-- Initial payment status is always `Pending`
-- Logging is asynchronous and non-blocking
+- Rate limiting doğrulama öncesinde uygulanır (kötüye kullanım önlenir)
+- API doğrulaması stateless’tir
+- `ExternalPaymentId` veritabanı seviyesinde UNIQUE constraint ile korunur
+- Başlangıç ödeme durumu her zaman `Pending` olarak atanır
+- Logging işlemi business akışını bloklamaz
 
 </div>
 
