@@ -178,3 +178,40 @@ flowchart LR
 | IP-based       | IP Address | Redis counter  |
 
 </div>
+
+# 🛡 10. Middleware Architecture
+
+PaymentApi Middleware Pipeline:
+<div align="center">
+| Middleware         | Purpose                  |
+| ------------------ | ------------------------ |
+| Authentication     | API key validation       |
+| Exception Handling | Global error handling    |
+| Rate Limiting      | Abuse protection         |
+| Logging            | Request/Response logging |
+| Response Wrapper   | Standard output          |
+
+</div>
+
+# 🏭 11. Production Enhancements
+<div align="center">
+| Area        | Improvement          |
+| ----------- | -------------------- |
+| Security    | API Gateway, mTLS    |
+| Scalability | Kubernetes           |
+| Reliability | Circuit Breaker      |
+| Consistency | Outbox Pattern       |
+| Monitoring  | Prometheus + Grafana |
+</div>
+
+# 🎯 13. Engineering Decisions Summary
+<div align="center">
+| Concern       | Approach          |
+| ------------- | ----------------- |
+| Idempotency   | Unique constraint |
+| Scalability   | Stateless auth    |
+| Performance   | Redis cache       |
+| Observability | ElasticSearch     |
+| Reliability   | Hangfire retry    |
+
+</div>
