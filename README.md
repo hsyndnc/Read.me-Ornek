@@ -272,6 +272,51 @@ sequenceDiagram
     PaymentApi-->>Client: 201 Created\nStatus: Pending
 
 ```
+2️⃣ Payment Creation Steps
+
+<div align="center">
+
+### 🔎 Payment Processing Steps
+
+| Step | Action | Success Result | Failure Result |
+|------|--------|---------------|----------------|
+| 1 | Receive POST `/api/payments` | Continue | - |
+| 2 | Increment rate limit counters (Redis) | Continue | 429 Too Many Requests |
+| 3 | Validate `Paywall-Api-Key` via AuthApi | Merchant context loaded | 401 Unauthorized |
+| 4 | Check `ExternalPaymentId` uniqueness | Continue | 409 Conflict |
+| 5 | Insert Payment (Status = Pending) | Payment created | - |
+| 6 | Log request/response to ElasticSearch | Log stored | Logging failure does not block |
+| 7 | Return response | 201 Created | - |
+
+</div>
+
+3️⃣ Failure Scenarios
+
+<div align="center">
+
+### 🚨 Failure Cases
+
+| Scenario | HTTP Status |
+|----------|------------|
+| Rate limit exceeded | 429 |
+| Invalid API key | 401 |
+| Duplicate ExternalPaymentId | 409 |
+
+</div>
+
+4️⃣ Design Guarantees
+
+<div align="center">
+
+### 🔐 Design Guarantees
+
+- Rate limiting is enforced before authentication to prevent abuse
+- API validation is stateless
+- `ExternalPaymentId` is protected by DB-level UNIQUE constraint
+- Initial payment status is always `Pending`
+- Logging is asynchronous and non-blocking
+
+</div>
 
 # 🚦 7. Rate Limiting Strategy
 <div align="center">
