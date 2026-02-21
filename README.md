@@ -154,10 +154,14 @@ flowchart LR
                │ Hangfire │
                └──────────┘
 ```
-# 🔐 3. Authentication Flow
 
+
+# 🔐 3. Authentication Flow
+<div align="center">
 | Step | Action                 | Failure Case |
 | ---- | ---------------------- | ------------ |
 | 1    | Read `Paywall-Api-Key` | 401          |
 | 2    | Validate API Key       | 401          |
 | 3    | Return Merchant Info   | Success      |
+
+</div>
