@@ -242,6 +242,37 @@ sequenceDiagram
 ✔ Session veya memory state tutulmaz
 </div>
 
+# 💳 Payment Creation Flow
+
+'''mermaid
+
+sequenceDiagram
+    participant Client
+    participant PaymentApi
+    participant Redis
+    participant AuthApi
+    participant PostgreSQL
+    participant ElasticSearch
+
+    Client->>PaymentApi: POST /api/payments\nHeader: Paywall-Api-Key
+    PaymentApi->>Redis: INCR rateLimit:merchant:{merchantId}\nINCR rateLimit:ip:{clientIp}
+    Redis-->>PaymentApi: OK / Limit Exceeded
+
+    PaymentApi->>AuthApi: POST /api/auth/validate
+    AuthApi-->>PaymentApi: Valid / 401
+
+    PaymentApi->>PostgreSQL: Check ExternalPaymentId (UNIQUE)
+    PostgreSQL-->>PaymentApi: Not Found / Conflict
+
+    PaymentApi->>PostgreSQL: Insert Payment (Status=Pending)
+    PostgreSQL-->>PaymentApi: Created (PaymentId, TrackingCode)
+
+    PaymentApi->>ElasticSearch: Index payment-logs
+
+    PaymentApi-->>Client: 201 Created\nStatus: Pending
+
+'''
+
 # 🚦 7. Rate Limiting Strategy
 <div align="center">
 
