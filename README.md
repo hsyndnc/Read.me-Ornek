@@ -126,6 +126,15 @@ flowchart LR
     PaymentApi --> Hangfire
     PaymentApi --> ElasticSearch
 ```
+1. Authentication Layer
+   - Header-based validation
+   - Stateless tasarım
+
+2. Payment Processing
+   - Transactional consistency
+   - Idempotency guarantee
+
+
 # 🔥 2️⃣ Box Layout (Daha Temiz ASCII)
 
 ```text
