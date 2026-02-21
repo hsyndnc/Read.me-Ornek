@@ -126,25 +126,60 @@ flowchart LR
     PaymentApi --> Hangfire
     PaymentApi --> ElasticSearch
 ```
-### Architectural Rationale
+## 🏗 Architectural Rationale (Mimari Yaklaşım)
 
-This architecture is designed based on the following principles:
+Bu mimari aşağıdaki mühendislik prensipleri doğrultusunda tasarlanmıştır:
 
-- **Separation of Concerns**
-  - Authentication isolated from business logic
-  - Cross-cutting concerns handled via middleware
+---
 
-- **Transactional Integrity**
-  - PostgreSQL as single source of truth
-  - ACID compliance for payment state changes
+### • Separation of Concerns (Sorumlulukların Ayrılması)
 
-- **Scalability**
-  - Stateless AuthApi
-  - Horizontally scalable PaymentApi
+- Authentication mekanizması business logic’ten izole edilmiştir.
+- Cross-cutting concern’ler (logging, rate limiting, exception handling) middleware katmanında ele alınmıştır.
+- Payment işlemleri yalnızca transactional domain logic’e odaklanmaktadır.
 
-- **Observability**
-  - Structured logging
-  - Centralized ElasticSearch integration
+Amaç: Kodun sürdürülebilir, test edilebilir ve genişletilebilir olması.
+
+---
+
+### • Transactional Integrity (İşlemsel Tutarlılık)
+
+- PostgreSQL sistemin tek doğruluk kaynağıdır (Single Source of Truth).
+- Payment state değişimleri ACID garantisi altında gerçekleştirilir.
+- `ExternalPaymentId` için UNIQUE constraint uygulanarak idempotency sağlanmıştır.
+
+Amaç: Çift ödeme oluşturulmasının ve veri tutarsızlığının önlenmesi.
+
+---
+
+### • Scalability (Ölçeklenebilirlik)
+
+- AuthApi stateless tasarlanmıştır.
+- PaymentApi yatay ölçeklenebilir yapıdadır.
+- Redis dağıtık cache ve rate limiting için kullanılmıştır.
+- Hangfire worker sayısı artırılarak background job’lar ölçeklenebilir hale getirilmiştir.
+
+Amaç: Artan trafik altında sistem performansının korunması.
+
+---
+
+### • Observability (Gözlemlenebilirlik)
+
+- Structured logging uygulanmıştır.
+- Request/Response logları ElasticSearch’e gönderilmektedir.
+- PaymentId ve MerchantId üzerinden izlenebilirlik sağlanmıştır.
+
+Amaç: Production ortamında hızlı hata analizi ve performans takibi.
+
+---
+
+### • Resilience (Dayanıklılık)
+
+- Background job’larda retry mekanizması aktiftir.
+- Timeout’a düşen `Pending` ödemeler otomatik olarak `Cancelled` durumuna alınır.
+- Rate limiting ile kötüye kullanım engellenir.
+
+Amaç: Sistem stabilitesinin korunması.
 
 
 # 🔥 2️⃣ Box Layout (Daha Temiz ASCII)
