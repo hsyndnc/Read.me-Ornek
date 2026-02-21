@@ -69,3 +69,19 @@ dotnet run --project ./Paywall.AuthApi
 ```bash
 dotnet run --project ./Paywall.PaymentApi
 ```
+
+## ⚡️ Quickstart (Kullanım)
+
+Sistem ayağa kalktıktan sonra, aşağıdaki örnek isteği kullanarak bir ödeme oluşturabilir ve süreci test edebilirsiniz.
+
+**Ödeme Oluşturma (POST):**
+```bash
+curl -X POST http://localhost:5001/api/payments \
+  -H "Paywall-Api-Key: secret_key_123" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "amount": 100.50,
+    "currency": "TRY",
+    "trackingCode": "TRK-001",
+    "externalPaymentId": "EXT-001"
+  }'
