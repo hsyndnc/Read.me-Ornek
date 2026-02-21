@@ -165,4 +165,6 @@ flowchart LR
 | 2    | Validate API Key       | 401          |
 | 3    | Return Merchant Info   | Success      |
 
+✔ AuthApi stateless tasarlanmıştır
+✔ Session veya memory state tutulmaz
 </div>
