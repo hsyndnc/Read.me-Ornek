@@ -34,18 +34,36 @@ Paywall Backend Case Project
 
 ## ⚙️ Installation (Kurulum)
 
-[cite_start]Sistem **.NET 8** sürümünü gerektirir[cite: 80]. [cite_start]Altyapıyı hızlıca ayağa kaldırmak için Docker kullanılması önerilir[cite: 81, 82, 84].
+Sistem **.NET 8** sürümünü gerektirir.Uygulamayı yerel makinenizde çalıştırmak için aşağıdaki adımları sırasıyla takip edin:
 
 ### 1. Repoyu Klonlayın
 Öncelikle terminalinizi açın ve projeyi bilgisayarınıza indirin:
 ```bash
 git clone [https://github.com/kullanici-adi/paywall-project.git](https://github.com/kullanici-adi/paywall-project.git)
+
+İndirme tamamlandıktan sonra proje klasörüne giriş yapın:
+
 cd paywall-project
 
-```bash
-# Bağımlılıkları başlatın (PostgreSQL, Redis, ElasticSearch)
-docker-compose up -d
+2. Docker Compose ile Altyapıyı Başlatın
+Aşağıdaki komut, docker-compose.yml dosyasındaki tüm bağımlılıkları (Veritabanı, Cache ve Log servisleri) otomatik olarak indirir ve yapılandırır:
 
-# Projeleri çalıştırın
+```bash
+docker-compose up-d
+
+3. Veritabanı Şemasını Uygulayın
+Konteynerlar ayağa kalktıktan sonra, PostgreSQL üzerinde tabloların oluşması için migration komutunu çalıştırın:
+
+```bash
+dotnet ef database update --project Paywall.Persistence
+
+4. Servisleri Çalıştırın
+Sistemdeki servisleri Docker üzerinden veya yerel terminalinizden başlatabilirsiniz:
+
+Kimlik Doğrulama Servisi (AuthApi):
+```bash
 dotnet run --project ./Paywall.AuthApi
+
+Ödeme İşlem Servisi (PaymentApi):
+```bash
 dotnet run --project ./Paywall.PaymentApi
