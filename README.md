@@ -2,7 +2,7 @@
 <a href="https://paywall.com">
 <picture>
 <source height="125" media="(prefers-color-scheme: dark)" srcset="./indir.png">
-<img height="125" alt="Paywall" src="https://raw.githubusercontent.com/gofiber/docs/master/static/img/logo.svg">
+<img height="125" alt="Paywall" src="./indir.png">
 </picture>
 </a>
 
