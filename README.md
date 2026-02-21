@@ -103,6 +103,7 @@ Production senaryosunda yatay ölçeklenebilirliği kolaylaştırmak
 
 **Architecture Summary**
 
+<div alignn="center">
 
 | Component     | Responsibility          | Scaling Strategy       |
 | ------------- | ----------------------- | ---------------------- |
@@ -112,4 +113,4 @@ Production senaryosunda yatay ölçeklenebilirliği kolaylaştırmak
 | Redis         | Cache + Rate Limit      | Distributed            |
 | Hangfire      | Background Jobs         | Worker Scaling         |
 | ElasticSearch | Logging & Observability | Cluster                |
-
+</div>
