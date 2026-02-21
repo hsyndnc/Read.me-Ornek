@@ -103,7 +103,7 @@ Production senaryosunda yatay ölçeklenebilirliği kolaylaştırmak
 
 **Architecture Summary**
 
-<div alignn="center">
+<div align="center">
 
 | Component     | Responsibility          | Scaling Strategy       |
 | ------------- | ----------------------- | ---------------------- |
