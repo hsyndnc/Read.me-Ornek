@@ -364,6 +364,15 @@ stateDiagram-v2
 
 ```
 
+🔥 5️⃣ Business Guarantee Bölümü (En Güçlü Ek)
+
+### 🧾 İş Kuralları Garantisi
+
+- Bir ödeme yalnızca bir kez `Completed` olabilir.
+- `Cancelled` durumuna geçmiş bir ödeme tekrar aktif hale getirilemez.
+- Callback yalnızca `Completed` durumundan sonra tetiklenir.
+
+
 # 🚦 7. Rate Limiting Strategy
 <div align="center">
 
