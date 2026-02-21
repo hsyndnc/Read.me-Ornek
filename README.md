@@ -168,3 +168,13 @@ flowchart LR
 ✔ AuthApi stateless tasarlanmıştır
 ✔ Session veya memory state tutulmaz
 </div>
+
+# 🚦 7. Rate Limiting Strategy
+<div align="center">
+
+| Type           | Key        | Implementation |
+| -------------- | ---------- | -------------- |
+| Merchant-based | merchantId | Redis counter  |
+| IP-based       | IP Address | Redis counter  |
+
+</div>
