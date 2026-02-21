@@ -153,3 +153,5 @@ flowchart LR
                ┌──────────┐
                │ Hangfire │
                └──────────┘
+```
+🔐 3. Authentication Flow
