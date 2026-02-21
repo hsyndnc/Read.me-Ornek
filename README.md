@@ -126,13 +126,25 @@ flowchart LR
     PaymentApi --> Hangfire
     PaymentApi --> ElasticSearch
 ```
-**1. Authentication Layer**
-   - Header-based validation
-   - Stateless tasarım
+### Architectural Rationale
 
-**2. Payment Processing**
-   - Transactional consistency
-   - Idempotency guarantee
+This architecture is designed based on the following principles:
+
+- **Separation of Concerns**
+  - Authentication isolated from business logic
+  - Cross-cutting concerns handled via middleware
+
+- **Transactional Integrity**
+  - PostgreSQL as single source of truth
+  - ACID compliance for payment state changes
+
+- **Scalability**
+  - Stateless AuthApi
+  - Horizontally scalable PaymentApi
+
+- **Observability**
+  - Structured logging
+  - Centralized ElasticSearch integration
 
 
 # 🔥 2️⃣ Box Layout (Daha Temiz ASCII)
