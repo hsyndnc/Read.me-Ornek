@@ -213,6 +213,20 @@ Amaç: Sistem stabilitesinin korunması.
 
 
 # 🔐 3. Authentication Flow
+
+sequenceDiagram
+    participant Client
+    participant PaymentApi
+    participant AuthApi
+
+    Client->>PaymentApi: Request + Paywall-Api-Key
+    PaymentApi->>AuthApi: Validate API Key
+    AuthApi-->>PaymentApi: MerchantId + MerchantName
+    PaymentApi-->>Client: Continue / 401
+
+
+
+
 <div align="center">
     
 | Step | Action                 | Failure Case |
