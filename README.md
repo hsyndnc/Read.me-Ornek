@@ -125,7 +125,7 @@ flowchart LR
     PaymentApi --> Redis
     PaymentApi --> Hangfire
     PaymentApi --> ElasticSearch
-
+```
 # 🔥 2️⃣ Box Layout (Daha Temiz ASCII)
 
 ```text
