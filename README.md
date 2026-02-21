@@ -1,7 +1,7 @@
 <h1 align="center">
 <a href="https://paywall.com">
 <picture>
-<source height="125" media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/gofiber/docs/master/static/img/logo-dark.svg">
+<source height="125" media="(prefers-color-scheme: dark)" srcset="./indir.png">
 <img height="125" alt="Paywall" src="https://raw.githubusercontent.com/gofiber/docs/master/static/img/logo.svg">
 </picture>
 </a>
