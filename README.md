@@ -179,6 +179,8 @@ flowchart TB
 
 ### Clean Architecture Layers
 
+<div align="center">
+
 ```
 ┌─────────────────────────────────────────────────────────┐
 │                    PaymentApi                           │
@@ -194,7 +196,9 @@ flowchart TB
 │    (EF Core, Redis, Hangfire, ElasticSearch, AuthApi)   │
 └─────────────────────────────────────────────────────────┘
 ```
+</div>
 
+<div align="center">
 
 ### Component Summary
 
@@ -209,6 +213,7 @@ flowchart TB
 
 ---
 
+</div>
 
 <br>
 <br>
