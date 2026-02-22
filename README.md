@@ -416,14 +416,17 @@ flowchart LR
     PaymentApi --> Client
 
 ```
+<div align="center">
 
-Query Implementation Strategy
+**Query Implementation Strategy**
 
 
 | Query Type        | Implementation |
 | ----------------- | -------------- |
 | TrackingCode      | LINQ           |
 | ExternalPaymentId | Raw SQL        |
+
+</div>
 
 
 # 🚦 7. Rate Limiting Strategy
