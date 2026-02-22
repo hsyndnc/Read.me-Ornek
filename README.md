@@ -640,6 +640,12 @@ Olası veri kaybı veya sistem arızalarında hızlı kurtarma için yedekleme v
 ---
 
 # 🎯 13. Engineering Decisions Summary
+
+
+
+Bu bölüm, mimari seçimlerin performans, ölçeklenebilirlik, güvenlik ve veri tutarlılığı açısından neden tercih edildiğini özetler. 
+Alınan kararlar, minimal gereksinimlerin ötesinde production-ready bir sistem hedefiyle şekillendirilmiştir.
+
 <div align="center">
     
 | Concern       | Approach          |
