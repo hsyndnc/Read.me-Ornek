@@ -48,16 +48,22 @@ Paywall Backend Case Project
 
 ---
 <br>
+<br>
+
 ## 📖 Overview
 
 Bu proje, sadeleştirilmiş bir ödeme işleme altyapısının analiz edilmesi, mimarisinin tasarlanması ve geliştirilmesi amacıyla hazırlanmıştır.
 
 Sistem iki ayrı servis olarak tasarlanmıştır:
 
+<div align="center">
+
 | Servis | Sorumluluk |
 |--------|------------|
 | **AuthApi** | Merchant doğrulama servisi (stateless) |
 | **PaymentApi** | Ödeme işleme ve sorgulama servisi |
+
+</div>
 
 PaymentApi, gelen her istekte AuthApi'ye doğrulama çağrısı yaparak merchant bilgisini alır ve yalnızca geçerli istekleri işleme alır.
 
@@ -114,11 +120,15 @@ dotnet run
 
 ### 5. Swagger UI'a Erişin
 
+<div align="center">
+
 | Servis | URL |
 |--------|-----|
 | AuthApi | https://localhost:7218/swagger |
 | PaymentApi | https://localhost:7027/swagger |
 | Hangfire Dashboard | https://localhost:7027/hangfire |
+
+</div>
 
 ---
 
