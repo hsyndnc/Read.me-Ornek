@@ -47,43 +47,60 @@ Paywall Backend Case Project
 - [Test Scenarios](#-test-scenarios)
 
 ---
+<br>
+## 📖 Overview
+
+Bu proje, sadeleştirilmiş bir ödeme işleme altyapısının analiz edilmesi, mimarisinin tasarlanması ve geliştirilmesi amacıyla hazırlanmıştır.
+
+Sistem iki ayrı servis olarak tasarlanmıştır:
+
+| Servis | Sorumluluk |
+|--------|------------|
+| **AuthApi** | Merchant doğrulama servisi (stateless) |
+| **PaymentApi** | Ödeme işleme ve sorgulama servisi |
+
+PaymentApi, gelen her istekte AuthApi'ye doğrulama çağrısı yaparak merchant bilgisini alır ve yalnızca geçerli istekleri işleme alır.
+
+### Bu Tasarımın Amacı
+
+- **Separation of Concerns:** Servis sorumluluklarını ayırmak
+- **Isolation:** Authentication ile business logic'i izole etmek
+- **Scalability:** Production senaryosunda yatay ölçeklenebilirliği kolaylaştırmak
+
+<br>
 
 ## ⚙️ Quick Start
 
-### Prerequisites
-
-- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
-- [Docker Desktop](https://www.docker.com/products/docker-desktop)
-- [Git](https://git-scm.com/)
-
-### 1. Clone Repository
+### 1. Repository'yi Klonlayın
 
 ```bash
 git clone https://github.com/yelizozkan/paywall-payment-system.git
 cd paywall-payment-system
 ```
 
-### 2. Start Infrastructure (Docker)
+### 2. Docker ile Altyapıyı Başlatın
+
+Aşağıdaki komut PostgreSQL, Redis ve ElasticSearch servislerini ayağa kaldırır:
 
 ```bash
 docker-compose up -d postgres redis elasticsearch
 ```
 
-### 3. Apply Database Migrations
+### 3. Veritabanı Migration'ını Uygulayın
 
 ```bash
 cd src/Paywall.Payment/Paywall.Payment.Infrastructure
 dotnet ef database update --startup-project ../Paywall.PaymentApi
 ```
 
-### 4. Run Services
+### 4. Servisleri Çalıştırın
 
-**Option A: Visual Studio**
-- Open `Paywall.sln`
-- Set Multiple Startup Projects (AuthApi + PaymentApi)
-- Press F5
+**Visual Studio ile:**
+- `Paywall.sln` dosyasını açın
+- Multiple Startup Projects ayarlayın (AuthApi + PaymentApi)
+- F5 ile çalıştırın
 
-**Option B: Terminal**
+**Terminal ile:**
 
 ```bash
 # Terminal 1 - AuthApi
@@ -95,10 +112,10 @@ cd src/Paywall.Payment/Paywall.PaymentApi
 dotnet run
 ```
 
-### 5. Access Swagger UI
+### 5. Swagger UI'a Erişin
 
-| Service | URL |
-|---------|-----|
+| Servis | URL |
+|--------|-----|
 | AuthApi | https://localhost:7218/swagger |
 | PaymentApi | https://localhost:7027/swagger |
 | Hangfire Dashboard | https://localhost:7027/hangfire |
@@ -110,27 +127,25 @@ dotnet run
 
 ### AuthApi
 
-| Method | Endpoint | Description | Auth |
-|--------|----------|-------------|------|
-| GET | `/api/auth/validate` | Validate API Key | Paywall-Api-Key |
+| Method | Endpoint | Açıklama | Auth |
+|--------|----------|----------|------|
+| GET | `/api/auth/validate` | API Key doğrulama | Paywall-Api-Key |
 
 ### PaymentApi
 
-| Method | Endpoint | Description | Auth |
-|--------|----------|-------------|------|
-| POST | `/api/payments` | Create Payment | Paywall-Api-Key |
-| GET | `/api/payments/{id}` | Get Payment by ID | Paywall-Api-Key |
-| GET | `/api/payments/by-tracking/{trackingCode}` | Get by TrackingCode (LINQ) | Paywall-Api-Key |
-| GET | `/api/payments/by-external/{externalPaymentId}` | Get by ExternalPaymentId (Raw SQL) | Paywall-Api-Key |
-| GET | `/api/payments` | List Payments (Paginated) | Paywall-Api-Key |
-| PUT | `/api/payments/{id}/complete` | Complete Payment | Paywall-Api-Key |
-| PUT | `/api/payments/{id}/cancel` | Cancel Payment | Paywall-Api-Key |
-
+| Method | Endpoint | Açıklama | Auth |
+|--------|----------|----------|------|
+| POST | `/api/payments` | Yeni ödeme oluştur | Paywall-Api-Key |
+| GET | `/api/payments/{id}` | ID ile ödeme sorgula | Paywall-Api-Key |
+| GET | `/api/payments/by-tracking/{trackingCode}` | TrackingCode ile sorgula (LINQ) | Paywall-Api-Key |
+| GET | `/api/payments/by-external/{externalPaymentId}` | ExternalPaymentId ile sorgula (Raw SQL) | Paywall-Api-Key |
+| GET | `/api/payments` | Ödemeleri listele (Paginated) | Paywall-Api-Key |
+| PUT | `/api/payments/{id}/complete` | Ödemeyi tamamla | Paywall-Api-Key |
+| PUT | `/api/payments/{id}/cancel` | Ödemeyi iptal et | Paywall-Api-Key |
 
 
 
 <br>
-
 
 
 ## 🏗 Architecture
@@ -288,80 +303,8 @@ stateDiagram-v2
 
 
 <br>
-
- ### 2.Failure Scenarios
-
-<div align="center">
-
-### 🚨 Failure Cases
-
-| Scenario | HTTP Status |
-|----------|------------|
-| Rate limit exceeded | 429 |
-| Invalid API key | 401 |
-| Duplicate ExternalPaymentId | 409 |
-
-</div>
-
-<br>
 <br>
 
-
-
-## 🐳 Docker Compose
-
-### Services
-
-| Service | Port | Description |
-|---------|------|-------------|
-| postgres | 5432 | PostgreSQL Database |
-| redis | 6379 | Redis Cache |
-| elasticsearch | 9200 | ElasticSearch Logging |
-| auth-api | 5002 | Authentication Service |
-| payment-api | 5001 | Payment Service |
-
-### Commands
-
-```bash
-# Start all infrastructure
-docker-compose up -d postgres redis elasticsearch
-
-# Start everything (including APIs)
-docker-compose up --build -d
-
-# View logs
-docker-compose logs -f payment-api
-
-# Stop all
-docker-compose down
-
-# Stop and remove volumes
-docker-compose down -v
-```
-
-### Redis CLI
-
-```bash
-docker exec -it paywall-redis redis-cli
-KEYS *
-```
-
-### ElasticSearch
-
-```bash
-# Check cluster health
-curl http://localhost:9200
-
-# View indices
-curl http://localhost:9200/_cat/indices?v
-
-# Search logs
-curl http://localhost:9200/paywall-logs-*/_search?pretty
-```
-
----
-
-<br>
 
 
 ## 🧪 Test Scenarios
@@ -452,29 +395,29 @@ Request
 ---
 
 # 🏭 11. Production Enhancements
+Production ortamında sistemin güvenli, ölçeklenebilir ve dayanıklı olması için aşağıdaki iyileştirmeler uygulanabilir:
+
 <div align="center">
-    
-| Area        | Improvement          |
-| ----------- | -------------------- |
-| Security    | API Gateway, mTLS    |
-| Scalability | Kubernetes           |
-| Reliability | Circuit Breaker      |
-| Consistency | Outbox Pattern       |
-| Monitoring  | Prometheus + Grafana |
+
+| Alan | İyileştirme |
+|------|-------------|
+| Security | API Gateway, mTLS |
+| Scalability | Kubernetes |
+| Resilience | Circuit Breaker (Polly) |
+| Observability | Prometheus + Grafana |
+| Consistency | Outbox Pattern |
+| CI/CD | GitHub Actions |
+
 </div>
+
 
 ---
 
-## 🏭 Production Ortamı Değerlendirmeleri
-
-<br>
 <br>
 
-### 🔐 Güvenlik (Security)
+### 🔐 Security (Güvenlik)
 
-Production ortamında güvenlik, servisler arası iletişimden credential yönetimine kadar çok katmanlı olarak ele alınmalıdır.
-
-<div align="center">
+Production ortamında güvenlik, servisler arası iletişimden credential yönetimine kadar çok katmanlı olarak ele alınabilir.
 
 | Önlem | Açıklama | Amaç |
 |-------|----------|------|
@@ -482,16 +425,16 @@ Production ortamında güvenlik, servisler arası iletişimden credential yönet
 | mTLS | Servisler arası şifreli iletişim | Internal güvenliği artırmak |
 | Secret Management | Vault / Secret Manager kullanımı | Credential güvenliği |
 | API Key Rotation | Anahtarların periyodik yenilenmesi | Anahtar sızıntısı riskini azaltmak |
-| Request Signature | Callback doğrulama | Sahte callback’i engellemek |
+| Request Signature | Callback doğrulama | Sahte callback'i engellemek |
 
 
 </div>
 
 ---
 
-### 📈 Ölçeklenebilirlik (Scalability)
+### 📈 Scalability (Ölçeklenebilirlik)
 
-Sistem, artan trafik altında performans kaybı yaşamadan yatay olarak ölçeklenebilir şekilde tasarlanmalıdır.
+Sistem, artan trafik altında performans kaybı yaşamadan yatay olarak ölçeklenebilir şekilde tasarlanabilir.
 
 <div align="center">
 
@@ -508,15 +451,15 @@ Sistem, artan trafik altında performans kaybı yaşamadan yatay olarak ölçekl
 
 ---
 
-### 🧱 Dayanıklılık (Resilience)
+### 🧱 Resilience (Dayanıklılık)
 
-Bağımlı servis hatalarında sistemin tamamen çökmesini engellemek için hata tolerans mekanizmaları uygulanmalıdır.
+Bağımlı servis hatalarında sistemin tamamen çökmesini engellemek için hata tolerans mekanizmaları uygulanabilir.
 
 <div align="center">
 
 | Mekanizma | Açıklama | Amaç |
-|------------|----------|------|
-| Circuit Breaker | Bağımlı servis arızasında devre kesme | Zincirleme hatayı önlemek |
+|-----------|----------|------|
+| Circuit Breaker | Polly ile devre kesme | Zincirleme hatayı önlemek |
 | Retry Policy | Exponential backoff | Geçici hataları tolere etmek |
 | Timeout Policy | Maksimum bekleme süresi | Sistem bloklanmasını önlemek |
 | Health Checks | Servis sağlık kontrolleri | Otomatik restart / failover |
@@ -525,14 +468,14 @@ Bağımlı servis hatalarında sistemin tamamen çökmesini engellemek için hat
 
 ---
 
-### 📊 Gözlemlenebilirlik (Observability)
+### 📊 Observability (Gözlemlenebilirlik)
 
-Production ortamında hataların hızlı tespiti ve performans analizi için ölçülebilir ve izlenebilir bir yapı kurulmalıdır.
+Production ortamında hataların hızlı tespiti ve performans analizi için ölçülebilir ve izlenebilir bir yapı kurulabilir.
 
 <div align="center">
 
 | Bileşen | Açıklama | Amaç |
-|----------|----------|------|
+|---------|----------|------|
 | Structured Logging | JSON format log | Kolay analiz |
 | Centralized Logging | ElasticSearch cluster | Tek noktadan log takibi |
 | Distributed Tracing | OpenTelemetry | Request izleme |
@@ -543,9 +486,9 @@ Production ortamında hataların hızlı tespiti ve performans analizi için öl
 
 ---
 
-### 🧾 Veri Tutarlılığı (Data Consistency)
+### 🧾 Data Consistency (Veri Tutarlılığı)
 
-Ödeme gibi kritik domain’lerde veri tutarlılığı deterministik ve kontrollü state geçişleri ile sağlanmalıdır.
+Ödeme gibi kritik domain'lerde veri tutarlılığı deterministik ve kontrollü state geçişleri ile sağlanabilir.
 
 <div align="center">
 
@@ -561,9 +504,9 @@ Production ortamında hataların hızlı tespiti ve performans analizi için öl
 
 ---
 
-### ⚙️ Performans
+### ⚙️ Performance (Performans)
 
-Düşük gecikme süresi ve yüksek throughput için cache, indeks ve bağlantı optimizasyonları uygulanmalıdır.
+Düşük gecikme süresi ve yüksek throughput için cache, indeks ve bağlantı optimizasyonları uygulanabilir.
 
 <div align="center">
 
@@ -579,22 +522,7 @@ Düşük gecikme süresi ve yüksek throughput için cache, indeks ve bağlantı
 
 ---
 
-### 🚦 Rate Limiting & Abuse Prevention
 
-Kötüye kullanım ve ani trafik artışlarına karşı sistem korunmalı ve adil kullanım sağlanmalıdır.
-
-<div align="center">
-
-| Tür | Açıklama | Amaç |
-|-----|----------|------|
-| Merchant Bazlı | Merchant başına limit | Adil kullanım |
-| IP Bazlı | IP başına limit | Bot saldırılarını önlemek |
-| Sliding Window | Zamana dayalı limit | Burst kontrolü |
-| Global Limit | Sistem genel limiti | Stabilite |
-
-</div>
-
----
 
 ### 🔄 CI/CD & Deployment
 
@@ -605,6 +533,7 @@ Deployment süreçleri otomatikleştirilerek kesintisiz ve güvenli sürüm geç
 | Uygulama | Açıklama | Amaç |
 |----------|----------|------|
 | Docker | Containerization | Taşınabilirlik |
+| GitHub Actions | CI/CD pipeline | Otomatik test ve deployment |
 | Blue-Green Deployment | Paralel release | Zero downtime |
 | Rolling Updates | Kademeli geçiş | Servis kesintisini önlemek |
 | Automated Migration | Migration kontrolü | Veri tutarlılığı |
@@ -630,31 +559,11 @@ Olası veri kaybı veya sistem arızalarında hızlı kurtarma için yedekleme v
 
 ---
 
-# 🎯 13. Engineering Decisions Summary
 
-
-
-Bu bölüm, mimari seçimlerin performans, ölçeklenebilirlik, güvenlik ve veri tutarlılığı açısından neden tercih edildiğini özetler. 
-Alınan kararlar, minimal gereksinimlerin ötesinde production-ready bir sistem hedefiyle şekillendirilmiştir.
-
-<div align="center">
-    
-| Concern       | Approach          |
-| ------------- | ----------------- |
-| Idempotency   | Unique constraint |
-| Scalability   | Stateless auth    |
-| Performance   | Redis cache       |
-| Observability | ElasticSearch     |
-| Reliability   | Hangfire retry    |
-
-</div>
-
----
 
 ## 📝 Sonuç
 
 Bu sistem, ödeme işlemlerinin güvenli, tutarlı ve ölçeklenebilir şekilde yönetilebilmesi amacıyla tasarlanmıştır. 
-Minimal gereksinimlerin ötesinde production ortamı senaryoları düşünülmüş, 
-observability ve resilience prensipleri uygulanmıştır.
+Minimal gereksinimlerin ötesinde de production ortamı senaryoları düşünülmüştür. 
 
-Mimari tercihler, deterministik state yönetimi ve idempotent işlem garantisi üzerine kuruludur.
+
