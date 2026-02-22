@@ -406,6 +406,9 @@ stateDiagram-v2
 
 # 🔍 6. Payment Query Flow (Cache-Aware)
 
+
+Payment sorguları öncelikle Redis cache üzerinden karşılanır. Cache miss durumunda veri PostgreSQL’den okunur ve tekrar cache’e yazılarak sonraki istekler için performans optimizasyonu sağlanır.
+
 ```mermaid
 
 flowchart LR
