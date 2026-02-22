@@ -33,6 +33,21 @@ Paywall Backend Case Project
 etmesini sağlayan bir payment orchestration sistemidir. </b>. Mühendislik yaklaşımını ve teknik karar alma süreçlerini  yansıtan bu proje; <b>AuthApi</b> ve <b>PaymentApi</b> olmak üzere iki ana servisten oluşur.</em>
 </p>
 
+
+## 📑 Table of Contents
+
+- [Quick Start](#-quick-start)
+- [Project Structure](#-project-structure)
+- [API Endpoints](#-api-endpoints)
+- [Architecture](#-architecture)
+- [Authentication Flow](#-authentication-flow)
+- [Payment Flows](#-payment-flows)
+- [Technologies](#-technologies)
+- [Docker Compose](#-docker-compose)
+- [Test Scenarios](#-test-scenarios)
+
+---
+
 ## ⚙️ Quick Start (Hızlı Kurulum)
 
 Sistem **.NET 8** sürümünü gerektirir.Uygulamayı yerel makinenizde çalıştırmak için aşağıdaki adımları sırasıyla takip edin:
