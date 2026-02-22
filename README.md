@@ -1,10 +1,8 @@
 <h1 align="center">
-<a href="https://github.com/kullanici-adi/paywall-project">
 <picture>
-<source height="125" media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/gofiber/docs/master/static/img/logo-dark.svg">
-<img height="125" alt="Paywall Logo" src="./indir.png">
+<img height="125" alt="Paywall Logo" src="./docs/images/logo.png">
 </picture>
-</a>
+
 
 
 
@@ -26,11 +24,13 @@ Paywall Backend Case Project
 <a href="#">
 <img src="https://img.shields.io/badge/ElasticSearch-005571?style=flat-square&logo=elasticsearch&logoColor=white">
 </a>
+<a href="#">
+<img src="https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white">
+</a>
 </h1>
 
 <p align="center">
-<em><b>Paywall</b>, Paywall, farklı merchant’ların tek bir merkezi altyapı üzerinden güvenli ve izlenebilir biçimde ödeme kabul 
-etmesini sağlayan bir payment orchestration sistemidir. </b>. Mühendislik yaklaşımını ve teknik karar alma süreçlerini  yansıtan bu proje; <b>AuthApi</b> ve <b>PaymentApi</b> olmak üzere iki ana servisten oluşur.</em>
+<em><b>Paywall</b>, farklı merchant'ların tek bir merkezi altyapı üzerinden güvenli ve izlenebilir biçimde ödeme kabul etmesini sağlayan bir <b>Payment Orchestration</b> sistemidir. Clean Architecture ve CQRS pattern kullanılarak geliştirilmiş bu proje; <b>AuthApi</b> ve <b>PaymentApi</b> olmak üzere iki ana servisten oluşur.</em>
 </p>
 
 
@@ -48,60 +48,64 @@ etmesini sağlayan bir payment orchestration sistemidir. </b>. Mühendislik yakl
 
 ---
 
-## ⚙️ Quick Start (Hızlı Kurulum)
+## ⚙️ Quick Start
 
-Sistem **.NET 8** sürümünü gerektirir.Uygulamayı yerel makinenizde çalıştırmak için aşağıdaki adımları sırasıyla takip edin:
+### Prerequisites
 
-### 1. Repoyu Klonlayın
-Öncelikle terminalinizi açın ve projeyi bilgisayarınıza indirin:
-```bash
-git clone [https://github.com/kullanici-adi/paywall-project.git](https://github.com/kullanici-adi/paywall-project.git)
-```
-İndirme tamamlandıktan sonra proje klasörüne giriş yapın:
-```bash
-cd paywall-project
-```
-### 2. Docker Compose ile Altyapıyı Başlatın
-Aşağıdaki komut, docker-compose.yml dosyasındaki tüm bağımlılıkları (Veritabanı, Cache ve Log servisleri) otomatik olarak indirir ve yapılandırır:
+- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop)
+- [Git](https://git-scm.com/)
+
+### 1. Clone Repository
 
 ```bash
-docker-compose up-d
+git clone https://github.com/yelizozkan/paywall-payment-system.git
+cd paywall-payment-system
 ```
 
-### 3. Veritabanı Şemasını Uygulayın
-Konteynerlar ayağa kalktıktan sonra, PostgreSQL üzerinde tabloların oluşması için migration komutunu çalıştırın:
+### 2. Start Infrastructure (Docker)
 
 ```bash
-dotnet ef database update --project Paywall.Persistence
-```
-### 4. Servisleri Çalıştırın
-Sistemdeki servisleri Docker üzerinden veya yerel terminalinizden başlatabilirsiniz:
-
-Kimlik Doğrulama Servisi (AuthApi):
-```bash
-dotnet run --project ./Paywall.AuthApi
-```
-Ödeme İşlem Servisi (PaymentApi):
-```bash
-dotnet run --project ./Paywall.PaymentApi
+docker-compose up -d postgres redis elasticsearch
 ```
 
+### 3. Apply Database Migrations
+
+```bash
+cd src/Paywall.Payment/Paywall.Payment.Infrastructure
+dotnet ef database update --startup-project ../Paywall.PaymentApi
+```
+
+### 4. Run Services
+
+**Option A: Visual Studio**
+- Open `Paywall.sln`
+- Set Multiple Startup Projects (AuthApi + PaymentApi)
+- Press F5
+
+**Option B: Terminal**
+
+```bash
+# Terminal 1 - AuthApi
+cd src/Paywall.AuthApi
+dotnet run
+
+# Terminal 2 - PaymentApi
+cd src/Paywall.Payment/Paywall.PaymentApi
+dotnet run
+```
+
+### 5. Access Swagger UI
+
+| Service | URL |
+|---------|-----|
+| AuthApi | https://localhost:7218/swagger |
+| PaymentApi | https://localhost:7027/swagger |
+| Hangfire Dashboard | https://localhost:7027/hangfire |
 
 ---
 
  
-## ⚡️ Quickstart (Kullanım)
-
-Sistem ayağa kalktıktan sonra, aşağıdaki örnek isteği kullanarak bir ödeme oluşturabilir ve süreci test edebilirsiniz.
-
-**Ödeme Oluşturma (POST):**
-Not: Windows kullanıyorsanız komutu tek satırda ve tırnaklara dikkat ederek yazınız.
-```bash
-curl -X POST "http://localhost:5001/api/payments" -H "Paywall-Api-Key: secret_key_123" -H "Content-Type: application/json" -d "{\"amount\": 100.50, \"currency\": \"TRY\", \"merchantId\": 1, \"trackingCode\": \"TRK-001\", \"externalPaymentId\": \"EXT-001\"}"
-```
-<br>
-<br>
----
 
 ## 💡 Technical Analysis (Aşama 1)
 **📖 Overview**
