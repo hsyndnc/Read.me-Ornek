@@ -79,7 +79,7 @@ dotnet run --project ./Paywall.PaymentApi
 
 
 
-
+---
  
 ## ⚡️ Quickstart (Kullanım)
 
