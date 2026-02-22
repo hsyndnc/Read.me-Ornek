@@ -345,7 +345,7 @@ sequenceDiagram
 
 # 🔄 5. Payment State Lifecycle
 
-🔥 1️⃣ State Transition Kuralları Ekleyelim
+
 
 <div align="center">
 
@@ -361,7 +361,8 @@ Geçersiz geçişler engellenmiştir (örneğin Completed → Pending mümkün d
 
 </div>
 
-🔥 2️⃣ Invalid Transition Protection (Çok Güçlü)
+<br>
+<br>
 
 ### 🛑 Geçersiz Geçiş Koruması
 
@@ -369,7 +370,8 @@ Geçersiz geçişler engellenmiştir (örneğin Completed → Pending mümkün d
 - State transition işlemleri atomic olarak gerçekleştirilir.
 - Aynı anda iki farklı güncelleme yapılması engellenir.
 
-🔥 3️⃣ Concurrency Notu (Senior Dokunuş)
+<br>
+<br>
 
 ### ⚙️ Concurrency Kontrolü
 
@@ -377,7 +379,8 @@ Geçersiz geçişler engellenmiştir (örneğin Completed → Pending mümkün d
 - Tekil payment kaydı üzerinden deterministik geçiş sağlanır.
 - Çift tamamlama (double completion) engellenmiştir.
 
-🔥 4️⃣ Lifecycle Diyagramını Biraz Zenginleştirelim
+<br>
+<br>
 
 ```mermaid
 
@@ -389,13 +392,17 @@ stateDiagram-v2
 
 ```
 
-🔥 5️⃣ Business Guarantee Bölümü (En Güçlü Ek)
+<br>
+<br>
 
 ### 🧾 İş Kuralları Garantisi
 
 - Bir ödeme yalnızca bir kez `Completed` olabilir.
 - `Cancelled` durumuna geçmiş bir ödeme tekrar aktif hale getirilemez.
 - Callback yalnızca `Completed` durumundan sonra tetiklenir.
+
+
+---
 
 # 🔍 6. Payment Query Flow (Cache-Aware)
 
