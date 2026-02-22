@@ -456,6 +456,83 @@ PaymentApi Middleware Pipeline:
 | Monitoring  | Prometheus + Grafana |
 </div>
 
+## 🏭 Production Ortamı Değerlendirmeleri
+### 🔐 Güvenlik (Security)
+
+| Önlem | Açıklama | Amaç |
+|-------|----------|------|
+| API Gateway | Rate limiting, IP filtering, WAF | Dış saldırıları engellemek |
+| mTLS | Servisler arası şifreli iletişim | Internal güvenliği artırmak |
+| Secret Management | Vault / Secret Manager kullanımı | Credential güvenliği |
+| API Key Rotation | Anahtarların periyodik yenilenmesi | Anahtar sızıntısı riskini azaltmak |
+| Request Signature | Callback doğrulama | Sahte callback’i engellemek |
+### 📈 Ölçeklenebilirlik (Scalability)
+
+| Yaklaşım | Açıklama | Amaç |
+|----------|----------|------|
+| Horizontal Scaling | PaymentApi & AuthApi çoğaltılabilir | Trafik artışına dayanıklılık |
+| Kubernetes | Container orchestration | Otomatik ölçekleme |
+| Redis Cluster | Dağıtık cache | Yük altında performans |
+| PostgreSQL Read Replica | Okuma yükünü dağıtmak | DB performansını artırmak |
+| Worker Scaling | Hangfire worker sayısını artırmak | Arka plan işlerini hızlandırmak |
+### 🧱 Dayanıklılık (Resilience)
+
+| Mekanizma | Açıklama | Amaç |
+|------------|----------|------|
+| Circuit Breaker | Bağımlı servis arızasında devre kesme | Zincirleme hatayı önlemek |
+| Retry Policy | Exponential backoff | Geçici hataları tolere etmek |
+| Timeout Policy | Maksimum bekleme süresi | Sistem bloklanmasını önlemek |
+| Health Checks | Servis sağlık kontrolleri | Otomatik restart / failover |
+### 📊 Gözlemlenebilirlik (Observability)
+
+| Bileşen | Açıklama | Amaç |
+|----------|----------|------|
+| Structured Logging | JSON format log | Kolay analiz |
+| Centralized Logging | ElasticSearch cluster | Tek noktadan log takibi |
+| Distributed Tracing | OpenTelemetry | Request izleme |
+| Metrics | Prometheus | Performans ölçümü |
+| Alerting | Grafana | Anlık hata bildirimi |
+### 🧾 Veri Tutarlılığı (Data Consistency)
+
+| Strateji | Açıklama | Amaç |
+|----------|----------|------|
+| Outbox Pattern | Event güvenli publish | Event kaybını önlemek |
+| Idempotent Endpoint | Aynı isteğin tekrarında güvenli işlem | Çift ödeme önleme |
+| Optimistic Concurrency | Version kontrolü | Çakışma önleme |
+| Transaction Boundary | Net transaction scope | Tutarlı veri yönetimi |
+### ⚙️ Performans
+
+| Optimizasyon | Açıklama | Amaç |
+|--------------|----------|------|
+| Redis TTL | Cache süresi yönetimi | Gereksiz DB yükünü azaltmak |
+| Index Optimization | ExternalPaymentId & TrackingCode index | Hızlı sorgu |
+| Connection Pooling | DB bağlantı yönetimi | Resource verimliliği |
+| Async I/O | Asenkron işlem | Yüksek throughput |
+### 🚦 Rate Limiting & Abuse Prevention
+
+| Tür | Açıklama | Amaç |
+|-----|----------|------|
+| Merchant Bazlı | Merchant başına limit | Adil kullanım |
+| IP Bazlı | IP başına limit | Bot saldırılarını önlemek |
+| Sliding Window | Zamana dayalı limit | Burst kontrolü |
+| Global Limit | Sistem genel limiti | Stabilite |
+### 🔄 CI/CD & Deployment
+
+| Uygulama | Açıklama | Amaç |
+|----------|----------|------|
+| Docker | Containerization | Taşınabilirlik |
+| Blue-Green Deployment | Paralel release | Zero downtime |
+| Rolling Updates | Kademeli geçiş | Servis kesintisini önlemek |
+| Automated Migration | Migration kontrolü | Veri tutarlılığı |
+### 📦 Disaster Recovery
+
+| Strateji | Açıklama | Amaç |
+|----------|----------|------|
+| Günlük Backup | Otomatik yedekleme | Veri kaybını azaltmak |
+| Point-in-Time Recovery | Belirli zamana dönme | Hızlı kurtarma |
+| Multi-Zone Deployment | Farklı availability zone | Yüksek erişilebilirlik |
+| Failover | Otomatik yedek sisteme geçiş | Süreklilik |
+
 # 🎯 13. Engineering Decisions Summary
 <div align="center">
     
