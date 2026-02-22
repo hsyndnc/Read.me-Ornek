@@ -660,3 +660,13 @@ Alınan kararlar, minimal gereksinimlerin ötesinde production-ready bir sistem 
 | Reliability   | Hangfire retry    |
 
 </div>
+
+---
+
+## 📝 Sonuç
+
+Bu sistem, ödeme işlemlerinin güvenli, tutarlı ve ölçeklenebilir şekilde yönetilebilmesi amacıyla tasarlanmıştır. 
+Minimal gereksinimlerin ötesinde production ortamı senaryoları düşünülmüş, 
+observability ve resilience prensipleri uygulanmıştır.
+
+Mimari tercihler, deterministik state yönetimi ve idempotent işlem garantisi üzerine kuruludur.
