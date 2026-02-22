@@ -122,6 +122,7 @@ dotnet run
 
 ---
 
+<div align="center">
 
 ## 🔌 API Endpoints
 
@@ -130,6 +131,7 @@ dotnet run
 | Method | Endpoint | Açıklama | Auth |
 |--------|----------|----------|------|
 | GET | `/api/auth/validate` | API Key doğrulama | Paywall-Api-Key |
+
 
 ### PaymentApi
 
@@ -143,6 +145,7 @@ dotnet run
 | PUT | `/api/payments/{id}/complete` | Ödemeyi tamamla | Paywall-Api-Key |
 | PUT | `/api/payments/{id}/cancel` | Ödemeyi iptal et | Paywall-Api-Key |
 
+</div>
 
 
 <br>
@@ -179,7 +182,7 @@ flowchart TB
 
 ### Clean Architecture Layers
 
-<div align="center">
+
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -196,7 +199,7 @@ flowchart TB
 │    (EF Core, Redis, Hangfire, ElasticSearch, AuthApi)   │
 └─────────────────────────────────────────────────────────┘
 ```
-</div>
+
 
 <div align="center">
 
