@@ -161,15 +161,6 @@ flowchart TB
 
 
 
-```mermaid
-flowchart LR
-    Client --> PaymentApi
-    PaymentApi --> AuthApi
-    PaymentApi --> PostgreSQL
-    PaymentApi --> Redis
-    PaymentApi --> Hangfire
-    PaymentApi --> ElasticSearch
-```
 ## 🏗 Architectural Rationale (Mimari Yaklaşım)
 
 Bu mimari aşağıdaki mühendislik prensipleri doğrultusunda tasarlanmıştır:
