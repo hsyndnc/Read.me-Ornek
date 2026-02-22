@@ -481,6 +481,8 @@ Middleware katmanı cross-cutting concern’leri business logic’ten ayırarak 
 
 ### 🔐 Güvenlik (Security)
 
+Production ortamında güvenlik, servisler arası iletişimden credential yönetimine kadar çok katmanlı olarak ele alınmalıdır.
+
 | Önlem | Açıklama | Amaç |
 |-------|----------|------|
 | API Gateway | Rate limiting, IP filtering, WAF | Dış saldırıları engellemek |
@@ -488,10 +490,12 @@ Middleware katmanı cross-cutting concern’leri business logic’ten ayırarak 
 | Secret Management | Vault / Secret Manager kullanımı | Credential güvenliği |
 | API Key Rotation | Anahtarların periyodik yenilenmesi | Anahtar sızıntısı riskini azaltmak |
 | Request Signature | Callback doğrulama | Sahte callback’i engellemek |
+
+---
+
 ### 📈 Ölçeklenebilirlik (Scalability)
 
-<br>
-<br>
+Sistem, artan trafik altında performans kaybı yaşamadan yatay olarak ölçeklenebilir şekilde tasarlanmalıdır.
 
 | Yaklaşım | Açıklama | Amaç |
 |----------|----------|------|
@@ -500,10 +504,12 @@ Middleware katmanı cross-cutting concern’leri business logic’ten ayırarak 
 | Redis Cluster | Dağıtık cache | Yük altında performans |
 | PostgreSQL Read Replica | Okuma yükünü dağıtmak | DB performansını artırmak |
 | Worker Scaling | Hangfire worker sayısını artırmak | Arka plan işlerini hızlandırmak |
+
+---
+
 ### 🧱 Dayanıklılık (Resilience)
 
-<br>
-<br>
+Bağımlı servis hatalarında sistemin tamamen çökmesini engellemek için hata tolerans mekanizmaları uygulanmalıdır.
 
 | Mekanizma | Açıklama | Amaç |
 |------------|----------|------|
@@ -511,10 +517,12 @@ Middleware katmanı cross-cutting concern’leri business logic’ten ayırarak 
 | Retry Policy | Exponential backoff | Geçici hataları tolere etmek |
 | Timeout Policy | Maksimum bekleme süresi | Sistem bloklanmasını önlemek |
 | Health Checks | Servis sağlık kontrolleri | Otomatik restart / failover |
+
+---
+
 ### 📊 Gözlemlenebilirlik (Observability)
 
-<br>
-<br>
+Production ortamında hataların hızlı tespiti ve performans analizi için ölçülebilir ve izlenebilir bir yapı kurulmalıdır.
 
 | Bileşen | Açıklama | Amaç |
 |----------|----------|------|
@@ -523,10 +531,12 @@ Middleware katmanı cross-cutting concern’leri business logic’ten ayırarak 
 | Distributed Tracing | OpenTelemetry | Request izleme |
 | Metrics | Prometheus | Performans ölçümü |
 | Alerting | Grafana | Anlık hata bildirimi |
+
+---
+
 ### 🧾 Veri Tutarlılığı (Data Consistency)
 
-<br>
-<br>
+Ödeme gibi kritik domain’lerde veri tutarlılığı deterministik ve kontrollü state geçişleri ile sağlanmalıdır.
 
 | Strateji | Açıklama | Amaç |
 |----------|----------|------|
@@ -534,7 +544,12 @@ Middleware katmanı cross-cutting concern’leri business logic’ten ayırarak 
 | Idempotent Endpoint | Aynı isteğin tekrarında güvenli işlem | Çift ödeme önleme |
 | Optimistic Concurrency | Version kontrolü | Çakışma önleme |
 | Transaction Boundary | Net transaction scope | Tutarlı veri yönetimi |
+
+---
+
 ### ⚙️ Performans
+
+Düşük gecikme süresi ve yüksek throughput için cache, indeks ve bağlantı optimizasyonları uygulanmalıdır.
 
 | Optimizasyon | Açıklama | Amaç |
 |--------------|----------|------|
@@ -542,10 +557,12 @@ Middleware katmanı cross-cutting concern’leri business logic’ten ayırarak 
 | Index Optimization | ExternalPaymentId & TrackingCode index | Hızlı sorgu |
 | Connection Pooling | DB bağlantı yönetimi | Resource verimliliği |
 | Async I/O | Asenkron işlem | Yüksek throughput |
+
+---
+
 ### 🚦 Rate Limiting & Abuse Prevention
 
-<br>
-<br>
+Kötüye kullanım ve ani trafik artışlarına karşı sistem korunmalı ve adil kullanım sağlanmalıdır.
 
 | Tür | Açıklama | Amaç |
 |-----|----------|------|
@@ -553,10 +570,12 @@ Middleware katmanı cross-cutting concern’leri business logic’ten ayırarak 
 | IP Bazlı | IP başına limit | Bot saldırılarını önlemek |
 | Sliding Window | Zamana dayalı limit | Burst kontrolü |
 | Global Limit | Sistem genel limiti | Stabilite |
+
+---
+
 ### 🔄 CI/CD & Deployment
 
-<br>
-<br>
+Deployment süreçleri otomatikleştirilerek kesintisiz ve güvenli sürüm geçişi sağlanmalıdır.
 
 | Uygulama | Açıklama | Amaç |
 |----------|----------|------|
@@ -564,10 +583,12 @@ Middleware katmanı cross-cutting concern’leri business logic’ten ayırarak 
 | Blue-Green Deployment | Paralel release | Zero downtime |
 | Rolling Updates | Kademeli geçiş | Servis kesintisini önlemek |
 | Automated Migration | Migration kontrolü | Veri tutarlılığı |
+
+---
+
 ### 📦 Disaster Recovery
 
-<br>
-<br>
+Olası veri kaybı veya sistem arızalarında hızlı kurtarma için yedekleme ve failover stratejileri uygulanmalıdır.
 
 | Strateji | Açıklama | Amaç |
 |----------|----------|------|
