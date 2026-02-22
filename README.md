@@ -90,7 +90,8 @@ Not: Windows kullanıyorsanız komutu tek satırda ve tırnaklara dikkat ederek 
 ```bash
 curl -X POST "http://localhost:5001/api/payments" -H "Paywall-Api-Key: secret_key_123" -H "Content-Type: application/json" -d "{\"amount\": 100.50, \"currency\": \"TRY\", \"merchantId\": 1, \"trackingCode\": \"TRK-001\", \"externalPaymentId\": \"EXT-001\"}"
 ```
-
+<br>
+<br>
 ---
 
 ## 💡 Technical Analysis (Aşama 1)
@@ -114,6 +115,9 @@ Authentication ile business logic’i izole etmek
 
 Production senaryosunda yatay ölçeklenebilirliği kolaylaştırmak
 
+<br>
+<br>
+
 **Architecture Summary**
 
 <div align="center">
@@ -127,6 +131,9 @@ Production senaryosunda yatay ölçeklenebilirliği kolaylaştırmak
 | Hangfire      | Background Jobs         | Worker Scaling         |
 | ElasticSearch | Logging & Observability | Cluster                |
 </div>
+
+<br>
+<br>
 
 ## 🏗 High-Level Architecture
 
@@ -156,7 +163,8 @@ flowchart TB
 
 ```
 
-
+<br>
+<br>
 
 ## 🏗 Architectural Rationale (Mimari Yaklaşım)
 
@@ -216,6 +224,9 @@ Amaç: Sistem stabilitesinin korunması.
 
 ---
 
+<br>
+<br>
+
 # 🔐 3. Authentication Flow
 
 ```mermaid
@@ -246,7 +257,10 @@ sequenceDiagram
 ✔ Session veya memory state tutulmaz
 </div>
 
-# 💳 Payment Creation Flow
+<br>
+<br>
+
+# 💳 4.Payment Creation Flow
 
 ```mermaid
 
@@ -296,6 +310,9 @@ sequenceDiagram
 
 </div>
 
+<br>
+<br>
+
  ### 2.Failure Scenarios
 
 <div align="center">
@@ -310,6 +327,9 @@ sequenceDiagram
 
 </div>
 
+<br>
+<br>
+
 ### 3.Design Guarantees
 
 <div align="center">
@@ -323,6 +343,11 @@ sequenceDiagram
 - Logging işlemi business akışını bloklamaz
 
 </div>
+
+<br>
+<br>
+
+---
 
 # 🔄 5. Payment State Lifecycle
 
