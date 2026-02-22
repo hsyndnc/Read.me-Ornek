@@ -70,6 +70,17 @@ dotnet run --project ./Paywall.AuthApi
 dotnet run --project ./Paywall.PaymentApi
 ```
 
+
+
+
+
+
+
+
+
+
+
+ 
 ## ⚡️ Quickstart (Kullanım)
 
 Sistem ayağa kalktıktan sonra, aşağıdaki örnek isteği kullanarak bir ödeme oluşturabilir ve süreci test edebilirsiniz.
