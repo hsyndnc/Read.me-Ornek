@@ -121,40 +121,24 @@ Production senaryosunda yatay ölçeklenebilirliği kolaylaştırmak
 
 flowchart TB
 
-    %% CLIENT
     Client[CLIENT<br/>Mobile App / Web App / Third-Party]
 
-    %% CORE APIs
-    PaymentAPI[Payment API (.NET 8)]
-    AuthAPI[Auth API<br/>Stateless - API Key Validation]
+    PaymentAPI["Payment API<br/>NET 8"]
+    AuthAPI["Auth API<br/>Stateless - API Key Validation"]
 
-    %% INFRA
     Redis[(Redis<br/>Cache + Rate Limiting)]
     PostgreSQL[(PostgreSQL<br/>Payments, Merchants)]
-    Hangfire[Hangfire<br/>Background Job Processing]
-    Elastic[(ElasticSearch<br/>Request/Response Logging)]
+    Hangfire["Hangfire<br/>Background Job Processing"]
+    Elastic["ElasticSearch<br/>Request/Response Logging"]
     Callback[[External Callback Service<br/>HTTP POST Endpoint]]
 
-    %% MAIN FLOW
     Client -->|HTTPS / REST| PaymentAPI
-
-    %% AUTH
     PaymentAPI -->|Validate API Key| AuthAPI
-
-    %% CACHE & RATE LIMIT
     PaymentAPI -->|Cache / Rate Limit| Redis
-
-    %% DATABASE
     PaymentAPI -->|CRUD Operations| PostgreSQL
-
-    %% JOB
     PaymentAPI -->|Enqueue Job| Hangfire
     Hangfire -.->|Async POST| Callback
-
-    %% JOB STATUS UPDATE
     Hangfire -.->|Status Update| PostgreSQL
-
-    %% LOGGING
     PaymentAPI -->|Request/Response Logging| Elastic
 
 ```
