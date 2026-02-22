@@ -164,7 +164,8 @@ flowchart TB
 
 Bu mimari aşağıdaki mühendislik prensipleri doğrultusunda tasarlanmıştır:
 
----
+<br>
+<br>
 
 ### • Separation of Concerns (Sorumlulukların Ayrılması)
 
@@ -326,7 +327,7 @@ sequenceDiagram
 
 ### 3.Design Guarantees
 
-<div align="center">
+
 
 ### 🔐 Design Guarantees
 
@@ -336,7 +337,6 @@ sequenceDiagram
 - Başlangıç ödeme durumu her zaman `Pending` olarak atanır
 - Logging işlemi business akışını bloklamaz
 
-</div>
 
 <br>
 <br>
