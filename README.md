@@ -29,10 +29,11 @@ Paywall Backend Case Project
 </h1>
 
 <p align="center">
-<em><b>Paywall</b>, farklı merchant'ların ödeme almasını sağlayan sadeleştirilmiş bir <b>ödeme işleme altyapısıdır</b>. Mühendislik yaklaşımını ve teknik karar alma süreçlerini  yansıtan bu proje; <b>AuthApi</b> ve <b>PaymentApi</b> olmak üzere iki ana servisten oluşur.</em>
+<em><b>Paywall</b>, Paywall, farklı merchant’ların tek bir merkezi altyapı üzerinden güvenli ve izlenebilir biçimde ödeme kabul 
+etmesini sağlayan bir payment orchestration sistemidir. </b>. Mühendislik yaklaşımını ve teknik karar alma süreçlerini  yansıtan bu proje; <b>AuthApi</b> ve <b>PaymentApi</b> olmak üzere iki ana servisten oluşur.</em>
 </p>
 
-## ⚙️ Installation (Kurulum)
+## ⚙️ Quick Start (Hızlı Kurulum)
 
 Sistem **.NET 8** sürümünü gerektirir.Uygulamayı yerel makinenizde çalıştırmak için aşağıdaki adımları sırasıyla takip edin:
 
