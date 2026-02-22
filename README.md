@@ -105,143 +105,102 @@ dotnet run
 
 ---
 
- 
 
-## 💡 Technical Analysis (Aşama 1)
-**📖 Overview**
+## 🔌 API Endpoints
 
-Bu proje, sadeleştirilmiş bir ödeme işleme altyapısının analiz edilmesi, mimarisinin tasarlanması ve geliştirilmesi amacıyla hazırlanmıştır.
+### AuthApi
 
-Sistem iki ayrı servis olarak tasarlanmıştır:
+| Method | Endpoint | Description | Auth |
+|--------|----------|-------------|------|
+| GET | `/api/auth/validate` | Validate API Key | Paywall-Api-Key |
 
-**AuthApi →** Merchant doğrulama servisi (stateless)
+### PaymentApi
 
-**PaymentApi →** Ödeme işleme ve sorgulama servisi
+| Method | Endpoint | Description | Auth |
+|--------|----------|-------------|------|
+| POST | `/api/payments` | Create Payment | Paywall-Api-Key |
+| GET | `/api/payments/{id}` | Get Payment by ID | Paywall-Api-Key |
+| GET | `/api/payments/by-tracking/{trackingCode}` | Get by TrackingCode (LINQ) | Paywall-Api-Key |
+| GET | `/api/payments/by-external/{externalPaymentId}` | Get by ExternalPaymentId (Raw SQL) | Paywall-Api-Key |
+| GET | `/api/payments` | List Payments (Paginated) | Paywall-Api-Key |
+| PUT | `/api/payments/{id}/complete` | Complete Payment | Paywall-Api-Key |
+| PUT | `/api/payments/{id}/cancel` | Cancel Payment | Paywall-Api-Key |
 
-PaymentApi, gelen her istekte AuthApi’ye doğrulama çağrısı yaparak merchant bilgisini alır ve yalnızca geçerli istekleri işleme alır.
 
-Bu tasarımın amacı:
 
-Servis sorumluluklarını ayırmak
-
-Authentication ile business logic’i izole etmek
-
-Production senaryosunda yatay ölçeklenebilirliği kolaylaştırmak
-
-<br>
-<br>
-
-**Architecture Summary**
-
-<div align="center">
-
-| Component     | Responsibility          | Scaling Strategy       |
-| ------------- | ----------------------- | ---------------------- |
-| AuthApi       | API Key doğrulama       | Stateless – Horizontal |
-| PaymentApi    | Payment işlemleri       | Horizontal             |
-| PostgreSQL    | Transactional Data      | Read Replica           |
-| Redis         | Cache + Rate Limit      | Distributed            |
-| Hangfire      | Background Jobs         | Worker Scaling         |
-| ElasticSearch | Logging & Observability | Cluster                |
-</div>
 
 <br>
-<br>
 
-## 🏗 High-Level Architecture
+
+
+## 🏗 Architecture
+
+### High-Level Architecture
 
 ```mermaid
-
 flowchart TB
-
     Client[CLIENT<br/>Mobile App / Web App / Third-Party]
 
-    PaymentAPI["Payment API<br/>NET 8"]
+    PaymentAPI["Payment API<br/>.NET 8 - Clean Architecture"]
     AuthAPI["Auth API<br/>Stateless - API Key Validation"]
 
     Redis[(Redis<br/>Cache + Rate Limiting)]
-    PostgreSQL[(PostgreSQL<br/>Payments, Merchants)]
-    Hangfire["Hangfire<br/>Background Job Processing"]
+    PostgreSQL[(PostgreSQL<br/>Payments Data)]
+    Hangfire["Hangfire<br/>Background Jobs"]
     Elastic["ElasticSearch<br/>Request/Response Logging"]
-    Callback[[External Callback Service<br/>HTTP POST Endpoint]]
+    Callback[[External Callback<br/>HTTP POST]]
 
-    Client -->|HTTPS / REST| PaymentAPI
+    Client -->|HTTPS + Paywall-Api-Key| PaymentAPI
     PaymentAPI -->|Validate API Key| AuthAPI
     PaymentAPI -->|Cache / Rate Limit| Redis
     PaymentAPI -->|CRUD Operations| PostgreSQL
     PaymentAPI -->|Enqueue Job| Hangfire
     Hangfire -.->|Async POST| Callback
-    Hangfire -.->|Status Update| PostgreSQL
-    PaymentAPI -->|Request/Response Logging| Elastic
-
+    Hangfire -.->|Cancel Expired| PostgreSQL
+    PaymentAPI -->|Request/Response Log| Elastic
 ```
 
-<br>
-<br>
 
-## 🏗 Architectural Rationale (Mimari Yaklaşım)
 
-Bu mimari aşağıdaki mühendislik prensipleri doğrultusunda tasarlanmıştır:
+### Clean Architecture Layers
 
-<br>
-<br>
+```
+┌─────────────────────────────────────────────────────────┐
+│                    PaymentApi                           │
+│              (Controllers, Middlewares)                 │
+├─────────────────────────────────────────────────────────┤
+│                    Application                          │
+│         (CQRS Commands/Queries, DTOs, Validators)       │
+├─────────────────────────────────────────────────────────┤
+│                      Domain                             │
+│            (Entities, Enums, Interfaces)                │
+├─────────────────────────────────────────────────────────┤
+│                   Infrastructure                        │
+│    (EF Core, Redis, Hangfire, ElasticSearch, AuthApi)   │
+└─────────────────────────────────────────────────────────┘
+```
 
-### • Separation of Concerns (Sorumlulukların Ayrılması)
 
-- Authentication mekanizması business logic’ten izole edilmiştir.
-- Cross-cutting concern’ler (logging, rate limiting, exception handling) middleware katmanında ele alınmıştır.
-- Payment işlemleri yalnızca transactional domain logic’e odaklanmaktadır.
+### Component Summary
 
-Amaç: Kodun sürdürülebilir, test edilebilir ve genişletilebilir olması.
-
----
-
-### • Transactional Integrity (İşlemsel Tutarlılık)
-
-- PostgreSQL sistemin tek doğruluk kaynağıdır (Single Source of Truth).
-- Payment state değişimleri ACID garantisi altında gerçekleştirilir.
-- `ExternalPaymentId` için UNIQUE constraint uygulanarak idempotency sağlanmıştır.
-
-Amaç: Çift ödeme oluşturulmasının ve veri tutarsızlığının önlenmesi.
-
----
-
-### • Scalability (Ölçeklenebilirlik)
-
-- AuthApi stateless tasarlanmıştır.
-- PaymentApi yatay ölçeklenebilir yapıdadır.
-- Redis dağıtık cache ve rate limiting için kullanılmıştır.
-- Hangfire worker sayısı artırılarak background job’lar ölçeklenebilir hale getirilmiştir.
-
-Amaç: Artan trafik altında sistem performansının korunması.
+| Component | Responsibility | Scaling Strategy |
+|-----------|----------------|------------------|
+| AuthApi | API Key validation | Stateless – Horizontal |
+| PaymentApi | Payment operations | Horizontal |
+| PostgreSQL | Transactional data | Read Replica |
+| Redis | Cache + Rate Limit | Distributed |
+| Hangfire | Background Jobs | Worker Scaling |
+| ElasticSearch | Logging | Cluster |
 
 ---
 
-### • Observability (Gözlemlenebilirlik)
-
-- Structured logging uygulanmıştır.
-- Request/Response logları ElasticSearch’e gönderilmektedir.
-- PaymentId ve MerchantId üzerinden izlenebilirlik sağlanmıştır.
-
-Amaç: Production ortamında hızlı hata analizi ve performans takibi.
-
----
-
-### • Resilience (Dayanıklılık)
-
-- Background job’larda retry mekanizması aktiftir.
-- Timeout’a düşen `Pending` ödemeler otomatik olarak `Cancelled` durumuna alınır.
-- Rate limiting ile kötüye kullanım engellenir.
-
-Amaç: Sistem stabilitesinin korunması.
-
-
----
 
 <br>
 <br>
 
-# 🔐 3. Authentication Flow
+
+
+## 🔐 Authentication Flow
 
 ```mermaid
 sequenceDiagram
@@ -249,35 +208,36 @@ sequenceDiagram
     participant PaymentApi
     participant AuthApi
 
-    Client->>PaymentApi: Request + Paywall-Api-Key
-    PaymentApi->>AuthApi: Validate API Key
-    AuthApi-->>PaymentApi: MerchantId + MerchantName
-    PaymentApi-->>Client: Continue / 401
-
+    Client->>PaymentApi: Request + Paywall-Api-Key Header
+    PaymentApi->>AuthApi: GET /api/auth/validate
+    AuthApi-->>PaymentApi: 200 OK (MerchantId, MerchantName)
+    PaymentApi-->>Client: Continue Request / 401 Unauthorized
 ```
----
+
 
 <div align="center">
-    
-### 🔎 Authentication Validation Steps
+ 
+### 🔎 Authentication Steps
 
-| Step | Action | Success Result | Failure Result |
-|------|--------|---------------|----------------|
-| 1 | Extract `Paywall-Api-Key` from Header | Continue | 401 Unauthorized |
-| 2 | Validate API Key via AuthApi | Merchant context loaded | 401 Unauthorized |
-| 3 | Inject MerchantId into Request Context | Request proceeds | - |
+| Step | Action | Success | Failure |
+|------|--------|---------|---------|
+| 1 | Extract `Paywall-Api-Key` from Header | Continue | 401 (5002) |
+| 2 | Validate via AuthApi | MerchantId loaded | 401 (5001) |
+| 3 | Inject MerchantId into Context | Request proceeds | - |
 
-✔ AuthApi stateless tasarlanmıştır
-✔ Session veya memory state tutulmaz
-</div>
+---
+
 
 <br>
 <br>
 
-# 💳 4.Payment Creation Flow
+
+
+## 💳 Payment Flows
+
+### Payment Creation
 
 ```mermaid
-
 sequenceDiagram
     participant Client
     participant PaymentApi
@@ -286,45 +246,47 @@ sequenceDiagram
     participant PostgreSQL
     participant ElasticSearch
 
-    Client->>PaymentApi: POST /api/payments\nHeader: Paywall-Api-Key
-    PaymentApi->>Redis: INCR rateLimit:merchant:{merchantId}\nINCR rateLimit:ip:{clientIp}
-    Redis-->>PaymentApi: OK / Limit Exceeded
+    Client->>PaymentApi: POST /api/payments
+    PaymentApi->>Redis: Check Rate Limit
+    Redis-->>PaymentApi: OK / 429 Too Many Requests
 
-    PaymentApi->>AuthApi: POST /api/auth/validate
-    AuthApi-->>PaymentApi: Valid / 401
+    PaymentApi->>AuthApi: Validate API Key
+    AuthApi-->>PaymentApi: MerchantId / 401
 
-    PaymentApi->>PostgreSQL: Check ExternalPaymentId (UNIQUE)
-    PostgreSQL-->>PaymentApi: Not Found / Conflict
+    PaymentApi->>PostgreSQL: Check ExternalPaymentId
+    PostgreSQL-->>PaymentApi: Not Found / 400 Conflict
 
-    PaymentApi->>PostgreSQL: Insert Payment (Status=Pending)
-    PostgreSQL-->>PaymentApi: Created (PaymentId, TrackingCode)
+    PaymentApi->>PostgreSQL: Insert Payment (Pending)
+    PostgreSQL-->>PaymentApi: Created
 
-    PaymentApi->>ElasticSearch: Index payment-logs
+    PaymentApi->>ElasticSearch: Log Request/Response
 
-    PaymentApi-->>Client: 201 Created\nStatus: Pending
-
+    PaymentApi-->>Client: 201 Created
 ```
+
+
+
+### Payment State Lifecycle
+
+```mermaid
+stateDiagram-v2
+    [*] --> Pending
+    Pending --> Completed : PUT /complete
+    Pending --> Cancelled : PUT /cancel or Timeout (30min)
+    Completed --> [*]
+    Cancelled --> [*]
+```
+
+
+
+| From | To | Trigger |
+|------|----|---------|
+| Pending | Completed | Manual completion |
+| Pending | Cancelled | Manual cancel or 30min timeout (Hangfire) |
+
 ---
 
-### 1.Payment Creation Steps
 
-<div align="center">
-
-### 🔎 Payment Processing Steps
-
-| Step | Action | Success Result | Failure Result |
-|------|--------|---------------|----------------|
-| 1 | Receive POST `/api/payments` | Continue | - |
-| 2 | Increment rate limit counters (Redis) | Continue | 429 Too Many Requests |
-| 3 | Validate `Paywall-Api-Key` via AuthApi | Merchant context loaded | 401 Unauthorized |
-| 4 | Check `ExternalPaymentId` uniqueness | Continue | 409 Conflict |
-| 5 | Insert Payment (Status = Pending) | Payment created | - |
-| 6 | Log request/response to ElasticSearch | Log stored | Logging failure does not block |
-| 7 | Return response | 201 Created | - |
-
-</div>
-
-<br>
 <br>
 
  ### 2.Failure Scenarios
@@ -344,141 +306,148 @@ sequenceDiagram
 <br>
 <br>
 
-### 3.Design Guarantees
 
 
+## 🐳 Docker Compose
 
-### 🔐 Design Guarantees
+### Services
 
-- Rate limiting doğrulama öncesinde uygulanır (kötüye kullanım önlenir)
-- API doğrulaması stateless’tir
-- `ExternalPaymentId` veritabanı seviyesinde UNIQUE constraint ile korunur
-- Başlangıç ödeme durumu her zaman `Pending` olarak atanır
-- Logging işlemi business akışını bloklamaz
+| Service | Port | Description |
+|---------|------|-------------|
+| postgres | 5432 | PostgreSQL Database |
+| redis | 6379 | Redis Cache |
+| elasticsearch | 9200 | ElasticSearch Logging |
+| auth-api | 5002 | Authentication Service |
+| payment-api | 5001 | Payment Service |
 
+### Commands
 
-<br>
-<br>
+```bash
+# Start all infrastructure
+docker-compose up -d postgres redis elasticsearch
+
+# Start everything (including APIs)
+docker-compose up --build -d
+
+# View logs
+docker-compose logs -f payment-api
+
+# Stop all
+docker-compose down
+
+# Stop and remove volumes
+docker-compose down -v
+```
+
+### Redis CLI
+
+```bash
+docker exec -it paywall-redis redis-cli
+KEYS *
+```
+
+### ElasticSearch
+
+```bash
+# Check cluster health
+curl http://localhost:9200
+
+# View indices
+curl http://localhost:9200/_cat/indices?v
+
+# Search logs
+curl http://localhost:9200/paywall-logs-*/_search?pretty
+```
 
 ---
 
-# 🔄 5. Payment State Lifecycle
-
-
-
-<div align="center">
-
-### 🔄 Durum Geçiş Kuralları
-
-| From | To | Koşul |
-|------|----|--------|
-| Pending | Completed | Başarılı ödeme sonucu |
-| Pending | Cancelled | Timeout (>30dk) veya manuel iptal |
-| Completed | CallbackSent | Callback job başarıyla tamamlandı |
-
-Geçersiz geçişler engellenmiştir (örneğin Completed → Pending mümkün değildir).
-
-</div>
-
-<br>
 <br>
 
-### 🛑 Geçersiz Geçiş Koruması
 
-- Durum değişimleri kontrollüdür.
-- State transition işlemleri atomic olarak gerçekleştirilir.
-- Aynı anda iki farklı güncelleme yapılması engellenir.
+## 🧪 Test Scenarios
 
-<br>
-<br>
+### ✅ Success Cases
 
-### ⚙️ Concurrency Kontrolü
+| # | Test | Expected |
+|---|------|----------|
+| 1 | Valid API Key (AuthApi) | 200 + MerchantId |
+| 2 | Create Payment | 201 Created |
+| 3 | Get Payment by ID | 200 + Payment |
+| 4 | Get by TrackingCode | 200 + Payment |
+| 5 | Get by ExternalPaymentId | 200 + Payment |
+| 6 | List Payments | 200 + Paginated List |
+| 7 | Complete Payment | 200 + Status=Completed |
+| 8 | Cancel Payment | 200 + Status=Cancelled |
 
-- Status güncellemeleri optimistic locking prensibine uygundur.
-- Tekil payment kaydı üzerinden deterministik geçiş sağlanır.
-- Çift tamamlama (double completion) engellenmiştir.
+### ❌ Error Cases
 
-<br>
-<br>
+| # | Test | Expected |
+|---|------|----------|
+| 1 | Missing API Key | 401 (5002) |
+| 2 | Invalid API Key | 401 (5001) |
+| 3 | Duplicate ExternalPaymentId | 400 (1000) |
+| 4 | Complete non-Pending | 400 |
+| 5 | Cancel non-Pending | 400 |
+| 6 | Payment Not Found | 404 |
+| 7 | Rate Limit Exceeded | 429 |
 
-```mermaid
+### Test API Keys (Development)
 
-stateDiagram-v2
-    [*] --> Pending
-    Pending --> Completed : Payment Success
-    Pending --> Cancelled : Timeout / Cancel
-    Completed --> CallbackSent : Async Callback
-
-```
-
-<br>
-<br>
-
-### 🧾 İş Kuralları Garantisi
-
-- Bir ödeme yalnızca bir kez `Completed` olabilir.
-- `Cancelled` durumuna geçmiş bir ödeme tekrar aktif hale getirilemez.
-- Callback yalnızca `Completed` durumundan sonra tetiklenir.
+| API Key | Merchant |
+|---------|----------|
+| `pk_test_merchant1_abc123xyz` | Test Merchant 1 |
+| `pk_test_merchant2_def456uvw` | Test Merchant 2 |
+| `pk_test_merchant3_inactive` | Test Merchant 3 |
 
 
 ---
+<br>
 
-# 🔍 6. Payment Query Flow (Cache-Aware)
 
-
-Payment sorguları öncelikle Redis cache üzerinden karşılanır. Cache miss durumunda veri PostgreSQL’den okunur ve tekrar cache’e yazılarak sonraki istekler için performans optimizasyonu sağlanır.
-
-```mermaid
-
-flowchart LR
-    Client --> PaymentApi
-    PaymentApi --> Redis
-    Redis -- Cache Miss --> PostgreSQL
-    PostgreSQL --> Redis
-    PaymentApi --> Client
+## 📊 Middleware Pipeline
 
 ```
-<div align="center">
+Request
+    │
+    ▼
+┌─────────────────────────────┐
+│ ExceptionHandlingMiddleware │  ← Global error handling
+└─────────────────────────────┘
+    │
+    ▼
+┌─────────────────────────────┐
+│ RequestResponseLoggingMiddleware │  ← ElasticSearch logging
+└─────────────────────────────┘
+    │
+    ▼
+┌─────────────────────────────┐
+│ ApiKeyAuthenticationMiddleware │  ← AuthApi validation
+└─────────────────────────────┘
+    │
+    ▼
+┌─────────────────────────────┐
+│   RateLimitingMiddleware    │  ← Redis rate limiting
+└─────────────────────────────┘
+    │
+    ▼
+┌─────────────────────────────┐
+│        Controller           │
+└─────────────────────────────┘
+```
 
-**Query Implementation Strategy**
+---
+<br>
 
+## 🎯 Engineering Decisions
 
-| Query Type        | Implementation |
-| ----------------- | -------------- |
-| TrackingCode      | LINQ           |
-| ExternalPaymentId | Raw SQL        |
-
-</div>
-
-
-# 🚦 7. Rate Limiting Strategy
-<div align="center">
-
-| Type           | Key        | Implementation |
-| -------------- | ---------- | -------------- |
-| Merchant-based | merchantId | Redis counter  |
-| IP-based       | IP Address | Redis counter  |
-
-</div>
-
-Rate limiting, kötüye kullanım ve sistem yükünü kontrol etmek amacıyla Redis üzerinde atomic sayaç mantığı ile uygulanmıştır.
-
-# 🛡 10. Middleware Architecture
-
-PaymentApi Middleware Pipeline:
-<div align="center">
-    
-| Middleware         | Purpose                  |
-| ------------------ | ------------------------ |
-| Authentication     | API key validation       |
-| Exception Handling | Global error handling    |
-| Rate Limiting      | Abuse protection         |
-| Logging            | Request/Response logging |
-| Response Wrapper   | Standard output          |
-
-</div>
-
-Middleware katmanı cross-cutting concern’leri business logic’ten ayırarak temiz ve sürdürülebilir bir mimari sağlar.
+| Concern | Approach | Reason |
+|---------|----------|--------|
+| Idempotency | Unique constraint on ExternalPaymentId | Prevent duplicate payments |
+| Scalability | Stateless AuthApi | Horizontal scaling |
+| Performance | Redis cache for queries | Reduce DB load |
+| Observability | ElasticSearch structured logging | Production debugging |
+| Reliability | Hangfire with retry | Job resilience |
+| Security | Middleware-level auth | Consistent authentication |
 
 ---
 
