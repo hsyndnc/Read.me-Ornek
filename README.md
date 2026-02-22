@@ -71,13 +71,6 @@ dotnet run --project ./Paywall.PaymentApi
 ```
 
 
-
-
-
-<br>
-<br>
-
-
 ---
 
  
