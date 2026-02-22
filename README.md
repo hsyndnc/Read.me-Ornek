@@ -429,6 +429,8 @@ Query Implementation Strategy
 
 </div>
 
+Rate limiting, kötüye kullanım ve sistem yükünü kontrol etmek amacıyla Redis üzerinde atomic sayaç mantığı ile uygulanmıştır.
+
 # 🛡 10. Middleware Architecture
 
 PaymentApi Middleware Pipeline:
@@ -444,6 +446,10 @@ PaymentApi Middleware Pipeline:
 
 </div>
 
+Middleware katmanı cross-cutting concern’leri business logic’ten ayırarak temiz ve sürdürülebilir bir mimari sağlar.
+
+---
+
 # 🏭 11. Production Enhancements
 <div align="center">
     
@@ -456,7 +462,13 @@ PaymentApi Middleware Pipeline:
 | Monitoring  | Prometheus + Grafana |
 </div>
 
+---
+
 ## 🏭 Production Ortamı Değerlendirmeleri
+
+<br>
+<br>
+
 ### 🔐 Güvenlik (Security)
 
 | Önlem | Açıklama | Amaç |
@@ -468,6 +480,9 @@ PaymentApi Middleware Pipeline:
 | Request Signature | Callback doğrulama | Sahte callback’i engellemek |
 ### 📈 Ölçeklenebilirlik (Scalability)
 
+<br>
+<br>
+
 | Yaklaşım | Açıklama | Amaç |
 |----------|----------|------|
 | Horizontal Scaling | PaymentApi & AuthApi çoğaltılabilir | Trafik artışına dayanıklılık |
@@ -477,6 +492,9 @@ PaymentApi Middleware Pipeline:
 | Worker Scaling | Hangfire worker sayısını artırmak | Arka plan işlerini hızlandırmak |
 ### 🧱 Dayanıklılık (Resilience)
 
+<br>
+<br>
+
 | Mekanizma | Açıklama | Amaç |
 |------------|----------|------|
 | Circuit Breaker | Bağımlı servis arızasında devre kesme | Zincirleme hatayı önlemek |
@@ -484,6 +502,9 @@ PaymentApi Middleware Pipeline:
 | Timeout Policy | Maksimum bekleme süresi | Sistem bloklanmasını önlemek |
 | Health Checks | Servis sağlık kontrolleri | Otomatik restart / failover |
 ### 📊 Gözlemlenebilirlik (Observability)
+
+<br>
+<br>
 
 | Bileşen | Açıklama | Amaç |
 |----------|----------|------|
@@ -493,6 +514,9 @@ PaymentApi Middleware Pipeline:
 | Metrics | Prometheus | Performans ölçümü |
 | Alerting | Grafana | Anlık hata bildirimi |
 ### 🧾 Veri Tutarlılığı (Data Consistency)
+
+<br>
+<br>
 
 | Strateji | Açıklama | Amaç |
 |----------|----------|------|
@@ -510,6 +534,9 @@ PaymentApi Middleware Pipeline:
 | Async I/O | Asenkron işlem | Yüksek throughput |
 ### 🚦 Rate Limiting & Abuse Prevention
 
+<br>
+<br>
+
 | Tür | Açıklama | Amaç |
 |-----|----------|------|
 | Merchant Bazlı | Merchant başına limit | Adil kullanım |
@@ -517,6 +544,9 @@ PaymentApi Middleware Pipeline:
 | Sliding Window | Zamana dayalı limit | Burst kontrolü |
 | Global Limit | Sistem genel limiti | Stabilite |
 ### 🔄 CI/CD & Deployment
+
+<br>
+<br>
 
 | Uygulama | Açıklama | Amaç |
 |----------|----------|------|
@@ -526,12 +556,17 @@ PaymentApi Middleware Pipeline:
 | Automated Migration | Migration kontrolü | Veri tutarlılığı |
 ### 📦 Disaster Recovery
 
+<br>
+<br>
+
 | Strateji | Açıklama | Amaç |
 |----------|----------|------|
 | Günlük Backup | Otomatik yedekleme | Veri kaybını azaltmak |
 | Point-in-Time Recovery | Belirli zamana dönme | Hızlı kurtarma |
 | Multi-Zone Deployment | Farklı availability zone | Yüksek erişilebilirlik |
 | Failover | Otomatik yedek sisteme geçiş | Süreklilik |
+
+---
 
 # 🎯 13. Engineering Decisions Summary
 <div align="center">
