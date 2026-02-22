@@ -91,6 +91,8 @@ Not: Windows kullanıyorsanız komutu tek satırda ve tırnaklara dikkat ederek 
 curl -X POST "http://localhost:5001/api/payments" -H "Paywall-Api-Key: secret_key_123" -H "Content-Type: application/json" -d "{\"amount\": 100.50, \"currency\": \"TRY\", \"merchantId\": 1, \"trackingCode\": \"TRK-001\", \"externalPaymentId\": \"EXT-001\"}"
 ```
 
+---
+
 ## 💡 Technical Analysis (Aşama 1)
 **📖 Overview**
 
@@ -212,7 +214,7 @@ Amaç: Production ortamında hızlı hata analizi ve performans takibi.
 Amaç: Sistem stabilitesinin korunması.
 
 
-
+---
 
 # 🔐 3. Authentication Flow
 
@@ -274,7 +276,9 @@ sequenceDiagram
     PaymentApi-->>Client: 201 Created\nStatus: Pending
 
 ```
-2️⃣ Payment Creation Steps
+---
+
+### 1.Payment Creation Steps
 
 <div align="center">
 
@@ -292,7 +296,7 @@ sequenceDiagram
 
 </div>
 
-3️⃣ Failure Scenarios
+ ### 2.Failure Scenarios
 
 <div align="center">
 
@@ -306,7 +310,7 @@ sequenceDiagram
 
 </div>
 
-4️⃣ Design Guarantees
+### 3.Design Guarantees
 
 <div align="center">
 
