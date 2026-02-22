@@ -483,6 +483,8 @@ Middleware katmanı cross-cutting concern’leri business logic’ten ayırarak 
 
 Production ortamında güvenlik, servisler arası iletişimden credential yönetimine kadar çok katmanlı olarak ele alınmalıdır.
 
+<div align="center">
+
 | Önlem | Açıklama | Amaç |
 |-------|----------|------|
 | API Gateway | Rate limiting, IP filtering, WAF | Dış saldırıları engellemek |
@@ -491,11 +493,17 @@ Production ortamında güvenlik, servisler arası iletişimden credential yönet
 | API Key Rotation | Anahtarların periyodik yenilenmesi | Anahtar sızıntısı riskini azaltmak |
 | Request Signature | Callback doğrulama | Sahte callback’i engellemek |
 
+
+</div>
+
 ---
 
 ### 📈 Ölçeklenebilirlik (Scalability)
 
 Sistem, artan trafik altında performans kaybı yaşamadan yatay olarak ölçeklenebilir şekilde tasarlanmalıdır.
+
+<div align="center">
+
 
 | Yaklaşım | Açıklama | Amaç |
 |----------|----------|------|
@@ -505,11 +513,15 @@ Sistem, artan trafik altında performans kaybı yaşamadan yatay olarak ölçekl
 | PostgreSQL Read Replica | Okuma yükünü dağıtmak | DB performansını artırmak |
 | Worker Scaling | Hangfire worker sayısını artırmak | Arka plan işlerini hızlandırmak |
 
+</div>
+
 ---
 
 ### 🧱 Dayanıklılık (Resilience)
 
 Bağımlı servis hatalarında sistemin tamamen çökmesini engellemek için hata tolerans mekanizmaları uygulanmalıdır.
+
+<div align="center">
 
 | Mekanizma | Açıklama | Amaç |
 |------------|----------|------|
@@ -518,11 +530,15 @@ Bağımlı servis hatalarında sistemin tamamen çökmesini engellemek için hat
 | Timeout Policy | Maksimum bekleme süresi | Sistem bloklanmasını önlemek |
 | Health Checks | Servis sağlık kontrolleri | Otomatik restart / failover |
 
+</div>
+
 ---
 
 ### 📊 Gözlemlenebilirlik (Observability)
 
 Production ortamında hataların hızlı tespiti ve performans analizi için ölçülebilir ve izlenebilir bir yapı kurulmalıdır.
+
+<div align="center">
 
 | Bileşen | Açıklama | Amaç |
 |----------|----------|------|
@@ -532,11 +548,15 @@ Production ortamında hataların hızlı tespiti ve performans analizi için öl
 | Metrics | Prometheus | Performans ölçümü |
 | Alerting | Grafana | Anlık hata bildirimi |
 
+</div>
+
 ---
 
 ### 🧾 Veri Tutarlılığı (Data Consistency)
 
 Ödeme gibi kritik domain’lerde veri tutarlılığı deterministik ve kontrollü state geçişleri ile sağlanmalıdır.
+
+<div align="center">
 
 | Strateji | Açıklama | Amaç |
 |----------|----------|------|
@@ -545,11 +565,16 @@ Production ortamında hataların hızlı tespiti ve performans analizi için öl
 | Optimistic Concurrency | Version kontrolü | Çakışma önleme |
 | Transaction Boundary | Net transaction scope | Tutarlı veri yönetimi |
 
+</div>
+
+
 ---
 
 ### ⚙️ Performans
 
 Düşük gecikme süresi ve yüksek throughput için cache, indeks ve bağlantı optimizasyonları uygulanmalıdır.
+
+<div align="center">
 
 | Optimizasyon | Açıklama | Amaç |
 |--------------|----------|------|
@@ -558,11 +583,16 @@ Düşük gecikme süresi ve yüksek throughput için cache, indeks ve bağlantı
 | Connection Pooling | DB bağlantı yönetimi | Resource verimliliği |
 | Async I/O | Asenkron işlem | Yüksek throughput |
 
+</div>
+
+
 ---
 
 ### 🚦 Rate Limiting & Abuse Prevention
 
 Kötüye kullanım ve ani trafik artışlarına karşı sistem korunmalı ve adil kullanım sağlanmalıdır.
+
+<div align="center">
 
 | Tür | Açıklama | Amaç |
 |-----|----------|------|
@@ -571,11 +601,15 @@ Kötüye kullanım ve ani trafik artışlarına karşı sistem korunmalı ve adi
 | Sliding Window | Zamana dayalı limit | Burst kontrolü |
 | Global Limit | Sistem genel limiti | Stabilite |
 
+</div>
+
 ---
 
 ### 🔄 CI/CD & Deployment
 
 Deployment süreçleri otomatikleştirilerek kesintisiz ve güvenli sürüm geçişi sağlanmalıdır.
+
+<div align="center">
 
 | Uygulama | Açıklama | Amaç |
 |----------|----------|------|
@@ -584,11 +618,15 @@ Deployment süreçleri otomatikleştirilerek kesintisiz ve güvenli sürüm geç
 | Rolling Updates | Kademeli geçiş | Servis kesintisini önlemek |
 | Automated Migration | Migration kontrolü | Veri tutarlılığı |
 
+</div>
+
 ---
 
 ### 📦 Disaster Recovery
 
 Olası veri kaybı veya sistem arızalarında hızlı kurtarma için yedekleme ve failover stratejileri uygulanmalıdır.
+
+<div align="center">
 
 | Strateji | Açıklama | Amaç |
 |----------|----------|------|
@@ -596,6 +634,8 @@ Olası veri kaybı veya sistem arızalarında hızlı kurtarma için yedekleme v
 | Point-in-Time Recovery | Belirli zamana dönme | Hızlı kurtarma |
 | Multi-Zone Deployment | Farklı availability zone | Yüksek erişilebilirlik |
 | Failover | Otomatik yedek sisteme geçiş | Süreklilik |
+
+</div>
 
 ---
 
